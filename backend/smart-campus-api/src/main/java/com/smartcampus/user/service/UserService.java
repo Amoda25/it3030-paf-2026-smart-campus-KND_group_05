@@ -48,14 +48,9 @@ public class UserService {
             throw new RuntimeException("Email already in use");
         }
 
-        long userCount = userRepository.count();
+        // Single query: if no admin exists yet, first user becomes admin
         boolean adminExists = userRepository.existsByRole(Role.ADMIN);
-
-        if (!adminExists && userCount == 0) {
-            user.setRole(Role.ADMIN);
-        } else {
-            user.setRole(Role.USER);
-        }
+        user.setRole(adminExists ? Role.USER : Role.ADMIN);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);

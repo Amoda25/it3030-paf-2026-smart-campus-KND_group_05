@@ -1,53 +1,36 @@
 package com.smartcampus.resource.model;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "resources")
+@Document(collection = "resources")
 public class Resource {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, length = 100)
     private String name;
-
-    @Column(nullable = false, length = 20)
     private String type;
-
-    @Column(nullable = false, length = 100)
     private String location;
-
     private Integer capacity;
-
-    @Column(length = 20)
     private String status = "ACTIVE";
-
-    @Column(columnDefinition = "TEXT")
     private String description;
-
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     public Resource() {
     }
 
-    @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
 
-    @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -83,7 +66,7 @@ public class Resource {
         return updatedAt;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

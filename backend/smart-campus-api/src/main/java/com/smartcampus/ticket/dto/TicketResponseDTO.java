@@ -5,14 +5,14 @@ import java.util.List;
 
 public class TicketResponseDTO {
 
-    private Long id;
+    private String id;
     private String title;
     private String description;
     private String priority;
     private String status;
-    private Long createdBy;
-    private Long resourceId;
-    private Long assignedTo;
+    private String createdBy;
+    private String resourceId;
+    private String assignedTo;
     private String resolutionNotes;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -22,7 +22,7 @@ public class TicketResponseDTO {
     public TicketResponseDTO() {
     }
 
-    public Long getId() { return id; }
+    public String getId() { return id; }
 
     public String getTitle() { return title; }
 
@@ -32,11 +32,11 @@ public class TicketResponseDTO {
 
     public String getStatus() { return status; }
 
-    public Long getCreatedBy() { return createdBy; }
+    public String getCreatedBy() { return createdBy; }
 
-    public Long getResourceId() { return resourceId; }
+    public String getResourceId() { return resourceId; }
 
-    public Long getAssignedTo() { return assignedTo; }
+    public String getAssignedTo() { return assignedTo; }
 
     public String getResolutionNotes() { return resolutionNotes; }
 
@@ -46,7 +46,7 @@ public class TicketResponseDTO {
 
     public List<String> getImages() { return images; }
 
-    public void setId(Long id) { this.id = id; }
+    public void setId(String id) { this.id = id; }
 
     public void setTitle(String title) { this.title = title; }
 
@@ -56,11 +56,11 @@ public class TicketResponseDTO {
 
     public void setStatus(String status) { this.status = status; }
 
-    public void setCreatedBy(Long createdBy) { this.createdBy = createdBy; }
+    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
 
-    public void setResourceId(Long resourceId) { this.resourceId = resourceId; }
+    public void setResourceId(String resourceId) { this.resourceId = resourceId; }
 
-    public void setAssignedTo(Long assignedTo) { this.assignedTo = assignedTo; }
+    public void setAssignedTo(String assignedTo) { this.assignedTo = assignedTo; }
 
     public void setResolutionNotes(String resolutionNotes) { this.resolutionNotes = resolutionNotes; }
 

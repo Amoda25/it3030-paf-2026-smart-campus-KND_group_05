@@ -45,7 +45,7 @@ public class TicketUserController {
             @RequestPart(value = "images", required = false) MultipartFile[] images,
             @AuthenticationPrincipal UserDetails userDetails) {
         
-        Long currentUserId = extractUserId(userDetails);
+        String currentUserId = extractUserId(userDetails);
         
         System.out.println("User ID: " + currentUserId + " is creating a ticket");
         System.out.println("Images received: " + (images == null ? 0 : images.length));
@@ -69,7 +69,7 @@ public class TicketUserController {
     public ResponseEntity<List<TicketResponseDTO>> getMyTickets(
             @AuthenticationPrincipal UserDetails userDetails) {
         
-        Long currentUserId = extractUserId(userDetails);
+        String currentUserId = extractUserId(userDetails);
         System.out.println("User ID: " + currentUserId + " is viewing their tickets");
         
         return ResponseEntity.ok(ticketService.getMyTickets(currentUserId));
@@ -77,10 +77,10 @@ public class TicketUserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TicketResponseDTO> getTicketById(
-            @PathVariable Long id,
+            @PathVariable String id,
             @AuthenticationPrincipal UserDetails userDetails) {
         
-        Long currentUserId = extractUserId(userDetails);
+        String currentUserId = extractUserId(userDetails);
         System.out.println("User ID: " + currentUserId + " is viewing ticket " + id);
         
         return ResponseEntity.ok(ticketService.getTicketById(id, currentUserId));
@@ -88,10 +88,10 @@ public class TicketUserController {
 
     @GetMapping("/{id}/images")
     public ResponseEntity<List<TicketImageResponseDTO>> getTicketImages(
-            @PathVariable Long id,
+            @PathVariable String id,
             @AuthenticationPrincipal UserDetails userDetails) {  // ← ADD THIS PARAMETER
         
-        Long currentUserId = Long.parseLong(userDetails.getUsername());
+        String currentUserId = userDetails.getUsername();
         System.out.println("User ID: " + currentUserId + " is viewing images for ticket " + id);
         
         return ResponseEntity.ok(ticketImageService.getImagesByTicketId(id, currentUserId));
@@ -103,7 +103,7 @@ public class TicketUserController {
             @RequestPart(value = "images", required = false) MultipartFile[] images,
             @AuthenticationPrincipal UserDetails userDetails) {
         
-        Long userId = extractUserId(userDetails);
+        String userId = extractUserId(userDetails);
         System.out.println("User ID: " + userId + " testing upload");
         System.out.println("TEST images count = " + (images == null ? 0 : images.length));
 
@@ -118,23 +118,23 @@ public class TicketUserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUserTicket(
-            @PathVariable Long id,
+            @PathVariable String id,
             @AuthenticationPrincipal UserDetails userDetails) {
         
-        Long userId = extractUserId(userDetails);
+        String userId = extractUserId(userDetails);
         System.out.println("User ID: " + userId + " is deleting ticket " + id);
         
         ticketService.deleteTicketForUser(id, userId);
         return ResponseEntity.ok("Ticket deleted successfully");
     }
 
-    private Long extractUserId(UserDetails userDetails) {
+    private String extractUserId(UserDetails userDetails) {
         if (userDetails == null) {
             throw new RuntimeException("User not authenticated");
         }
         String username = userDetails.getUsername();
         try {
-            return Long.parseLong(username);
+            return username;
         } catch (NumberFormatException e) {
             return userRepository.findByEmail(username)
                     .orElseThrow(() -> new RuntimeException("User not found: " + username))

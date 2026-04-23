@@ -30,7 +30,7 @@ public class BookingUserController {
             @Valid @RequestBody BookingCreateDTO dto,
             @AuthenticationPrincipal UserDetails userDetails) {
         
-        Long userId = extractUserId(userDetails);
+        String userId = extractUserId(userDetails);
         BookingResponseDTO created = bookingService.createBooking(dto, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
@@ -39,32 +39,32 @@ public class BookingUserController {
     public ResponseEntity<List<BookingResponseDTO>> getMyBookings(
             @AuthenticationPrincipal UserDetails userDetails) {
         
-        Long userId = extractUserId(userDetails);
+        String userId = extractUserId(userDetails);
         List<BookingResponseDTO> bookings = bookingService.getUserBookings(userId);
         return ResponseEntity.ok(bookings);
     }
     
     @GetMapping("/bookings/{id}")
     public ResponseEntity<BookingResponseDTO> getBookingById(
-            @PathVariable Long id,
+            @PathVariable String id,
             @AuthenticationPrincipal UserDetails userDetails) {
         
-        Long userId = extractUserId(userDetails);
+        String userId = extractUserId(userDetails);
         BookingResponseDTO booking = bookingService.getUserBookingById(id, userId);
         return ResponseEntity.ok(booking);
     }
     
     @PutMapping("/bookings/{id}/cancel")
     public ResponseEntity<BookingResponseDTO> cancelBooking(
-            @PathVariable Long id,
+            @PathVariable String id,
             @AuthenticationPrincipal UserDetails userDetails) {
         
-        Long userId = extractUserId(userDetails);
+        String userId = extractUserId(userDetails);
         BookingResponseDTO cancelled = bookingService.cancelBooking(id, userId);
         return ResponseEntity.ok(cancelled);
     }
     
-    private Long extractUserId(UserDetails userDetails) {
+    private String extractUserId(UserDetails userDetails) {
         if (userDetails == null) {
             throw new RuntimeException("User not authenticated");
         }
@@ -72,7 +72,7 @@ public class BookingUserController {
         String username = userDetails.getUsername();
         
         try {
-            return Long.parseLong(username);
+            return username;
         } catch (NumberFormatException e) {
             return userRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("User not found"))

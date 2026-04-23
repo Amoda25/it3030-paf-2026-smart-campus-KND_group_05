@@ -44,14 +44,14 @@ public class BookingAdminController {
     }
     
     @PutMapping("/bookings/{id}/approve")
-    public ResponseEntity<BookingResponseDTO> approveBooking(@PathVariable Long id) {
+    public ResponseEntity<BookingResponseDTO> approveBooking(@PathVariable String id) {
         BookingResponseDTO approved = bookingService.approveBooking(id);
         return ResponseEntity.ok(approved);
     }
     
     @PutMapping("/bookings/{id}/reject")
     public ResponseEntity<BookingResponseDTO> rejectBooking(
-            @PathVariable Long id,
+            @PathVariable String id,
             @Valid @RequestBody BookingDecisionDTO decision) {
         
         BookingResponseDTO rejected = bookingService.rejectBooking(id, decision.getReason());
@@ -59,13 +59,13 @@ public class BookingAdminController {
     }
     
     @GetMapping("/bookings/{id}")
-    public ResponseEntity<BookingResponseDTO> getBookingById(@PathVariable Long id) {
+    public ResponseEntity<BookingResponseDTO> getBookingById(@PathVariable String id) {
         BookingResponseDTO booking = bookingService.getBookingById(id);
         return ResponseEntity.ok(booking);
     }
 
     @DeleteMapping("/bookings/{id}")
-    public ResponseEntity<Void> deleteBooking(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteBooking(@PathVariable String id) {
         bookingService.deleteBooking(id);
         return ResponseEntity.noContent().build();
     }

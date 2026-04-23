@@ -1,16 +1,16 @@
 package com.smartcampus.ticket.dto;
 
 public class TicketAssignDTO {
-    private Long technicianId;
+    private String technicianId;
 
     public TicketAssignDTO() {
     }
 
-    public Long getTechnicianId() {
+    public String getTechnicianId() {
         return technicianId;
     }
 
-    public void setTechnicianId(Long technicianId) {
+    public void setTechnicianId(String technicianId) {
         this.technicianId = technicianId;
     }
 }

@@ -50,7 +50,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public TicketResponseDTO createTicket(TicketCreateDTO dto, Long currentUserId) {
+    public TicketResponseDTO createTicket(TicketCreateDTO dto, String currentUserId) {
         Ticket ticket = new Ticket();
         ticket.setTitle(dto.getTitle());
         ticket.setDescription(dto.getDescription());
@@ -88,7 +88,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<TicketResponseDTO> getMyTickets(Long currentUserId) {
+    public List<TicketResponseDTO> getMyTickets(String currentUserId) {
         List<Ticket> tickets = ticketRepository.findByCreatedByOrderByCreatedAtDesc(currentUserId);
         List<TicketResponseDTO> responseList = new ArrayList<>();
 
@@ -99,7 +99,7 @@ public class TicketServiceImpl implements TicketService {
         return responseList;
     }
     @Override
-    public TicketResponseDTO getTicketById(Long ticketId, Long currentUserId) {
+    public TicketResponseDTO getTicketById(String ticketId, String currentUserId) {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
 
@@ -123,7 +123,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void assignTechnician(Long ticketId, Long technicianId) {
+    public void assignTechnician(String ticketId, String technicianId) {
 
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
@@ -143,7 +143,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<TicketResponseDTO> getAssignedTickets(Long technicianId) {
+    public List<TicketResponseDTO> getAssignedTickets(String technicianId) {
         List<Ticket> tickets = ticketRepository.findByAssignedToOrderByCreatedAtDesc(technicianId);
         List<TicketResponseDTO> responseList = new ArrayList<>();
 
@@ -155,7 +155,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void updateTicketStatus(Long ticketId, String status, Long technicianId) {
+    public void updateTicketStatus(String ticketId, String status, String technicianId) {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
 
@@ -189,7 +189,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void updateResolution(Long ticketId, String resolutionNotes, Long technicianId) {
+    public void updateResolution(String ticketId, String resolutionNotes, String technicianId) {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
 
@@ -206,7 +206,7 @@ public class TicketServiceImpl implements TicketService {
 
 
     @Override
-    public void deleteTicket(Long ticketId) {
+    public void deleteTicket(String ticketId) {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
 
@@ -234,7 +234,7 @@ public class TicketServiceImpl implements TicketService {
 
 
     @Override
-    public void deleteTicketForTechnician(Long ticketId, Long technicianId) {
+    public void deleteTicketForTechnician(String ticketId, String technicianId) {
 
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ticket not found"));
@@ -270,7 +270,7 @@ public class TicketServiceImpl implements TicketService {
 
 
     @Override
-    public void deleteTicketForUser(Long ticketId, Long userId) {
+    public void deleteTicketForUser(String ticketId, String userId) {
 
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ticket not found"));

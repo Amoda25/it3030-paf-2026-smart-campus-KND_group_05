@@ -20,7 +20,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment addComment(Long ticketId, CommentCreateDTO dto, Long currentUserId) {
+    public Comment addComment(String ticketId, CommentCreateDTO dto, String currentUserId) {
 
         Comment comment = new Comment();
         comment.setTicketId(ticketId);
@@ -31,12 +31,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getCommentsByTicketId(Long ticketId) {
+    public List<Comment> getCommentsByTicketId(String ticketId) {
         return commentRepository.findByTicketId(ticketId);
     }
 
     @Override
-    public Comment updateComment(Long commentId, CommentUpdateDTO dto, Long currentUserId) {
+    public Comment updateComment(String commentId, CommentUpdateDTO dto, String currentUserId) {
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
@@ -50,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void deleteComment(Long commentId, Long currentUserId) {
+    public void deleteComment(String commentId, String currentUserId) {
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));

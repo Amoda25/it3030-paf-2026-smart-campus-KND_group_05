@@ -2,17 +2,16 @@ package com.smartcampus.booking.repository;
 
 import com.smartcampus.booking.model.Booking;
 import com.smartcampus.booking.model.BookingStatus;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface BookingRepository extends JpaRepository<Booking, Long> {
+public interface BookingRepository extends MongoRepository<Booking, String> {
     
     // Find bookings by user (for My Bookings page)
-    List<Booking> findByUserIdOrderByStartTimeDesc(Long userId);
+    List<Booking> findByUserIdOrderByStartTimeDesc(String userId);
     
     // Find all bookings ordered by creation (for admin)
     List<Booking> findAllByOrderByCreatedAtDesc();
@@ -24,27 +23,22 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByStatus(BookingStatus status);
     
     // Find booking by id and user (for ownership check)
-    Optional<Booking> findByIdAndUserId(Long id, Long userId);
+    Optional<Booking> findByIdAndUserId(String id, String userId);
     
     //  CRITICAL: Check for overlapping bookings (conflict detection)
-    @Query("SELECT b FROM Booking b WHERE b.resourceId = :resourceId " +
-           "AND b.status IN ('APPROVED', 'PENDING') " +
-           "AND b.startTime < :endTime AND b.endTime > :startTime")
+    @Query("{ 'resourceId': ?0, 'status': { $in: ['APPROVED', 'PENDING'] }, 'startTime': { $lt: ?2 }, 'endTime': { $gt: ?1 } }")
     List<Booking> findConflictingBookings(
-        @Param("resourceId") Long resourceId,
-        @Param("startTime") LocalDateTime startTime,
-        @Param("endTime") LocalDateTime endTime
+        String resourceId,
+        LocalDateTime startTime,
+        LocalDateTime endTime
     );
     
     // Check for overlapping excluding a specific booking (for updates)
-    @Query("SELECT b FROM Booking b WHERE b.resourceId = :resourceId " +
-           "AND b.status IN ('APPROVED', 'PENDING') " +
-           "AND b.startTime < :endTime AND b.endTime > :startTime " +
-           "AND b.id != :excludeId")
+    @Query("{ 'resourceId': ?0, 'status': { $in: ['APPROVED', 'PENDING'] }, 'startTime': { $lt: ?2 }, 'endTime': { $gt: ?1 }, '_id': { $ne: ?3 } }")
     List<Booking> findConflictingBookingsExcludingId(
-        @Param("resourceId") Long resourceId,
-        @Param("startTime") LocalDateTime startTime,
-        @Param("endTime") LocalDateTime endTime,
-        @Param("excludeId") Long excludeId
+        String resourceId,
+        LocalDateTime startTime,
+        LocalDateTime endTime,
+        String excludeId
     );
 }

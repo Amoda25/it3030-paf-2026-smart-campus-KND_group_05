@@ -1,49 +1,31 @@
 package com.smartcampus.booking.model;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "bookings", 
-       indexes = {
-           @Index(name = "idx_resource_time", columnList = "resource_id, start_time, end_time")
-       })
+@Document(collection = "bookings")
 public class Booking {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     
-    @Column(name = "resource_id", nullable = false)
-    private Long resourceId;
+    private String resourceId;
+    private String userId;
     
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
-    
-    @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
-    
-    @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
     
     private String purpose;
     
     private Integer attendees;
     
-    @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "VARCHAR(20) DEFAULT 'PENDING'")
     private BookingStatus status = BookingStatus.PENDING;
     
-    @Column(name = "rejection_reason")
     private String rejectionReason;
-    
-    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
-    
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
-    @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
@@ -52,7 +34,6 @@ public class Booking {
         }
     }
     
-    @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
@@ -60,7 +41,7 @@ public class Booking {
     // Constructors
     public Booking() {}
     
-    public Booking(Long resourceId, Long userId, LocalDateTime startTime, 
+    public Booking(String resourceId, String userId, LocalDateTime startTime, 
                    LocalDateTime endTime, String purpose, Integer attendees) {
         this.resourceId = resourceId;
         this.userId = userId;
@@ -71,14 +52,14 @@ public class Booking {
     }
     
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
     
-    public Long getResourceId() { return resourceId; }
-    public void setResourceId(Long resourceId) { this.resourceId = resourceId; }
+    public String getResourceId() { return resourceId; }
+    public void setResourceId(String resourceId) { this.resourceId = resourceId; }
     
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
     
     public LocalDateTime getStartTime() { return startTime; }
     public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }

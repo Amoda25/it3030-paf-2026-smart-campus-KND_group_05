@@ -9,11 +9,11 @@ import com.smartcampus.ticket.model.TicketImage;
 
 public interface TicketImageService {
 
-    List<TicketImage> uploadImages(Long ticketId, List<MultipartFile> files);
+    List<TicketImage> uploadImages(String ticketId, List<MultipartFile> files);
 
-    List<TicketImageResponseDTO> getImagesByTicketId(Long ticketId, Long currentUserId);
+    List<TicketImageResponseDTO> getImagesByTicketId(String ticketId, String currentUserId);
 
-    List<TicketImageResponseDTO> getImagesByTicketIdForTechnician(Long ticketId, Long technicianId);
+    List<TicketImageResponseDTO> getImagesByTicketIdForTechnician(String ticketId, String technicianId);
 
-    List<TicketImageResponseDTO> getImagesByTicketIdForAdmin(Long ticketId);
+    List<TicketImageResponseDTO> getImagesByTicketIdForAdmin(String ticketId);
 }

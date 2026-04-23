@@ -8,19 +8,19 @@ import com.smartcampus.notification.model.NotificationType;
 
 public interface NotificationService {
 
-    void createNotification(Long userId, NotificationType type, String message, Long referenceId);
+    void createNotification(String userId, NotificationType type, String message, String referenceId);
 
-    List<NotificationDTO> getAllNotificationsByUserId(Long userId);
+    List<NotificationDTO> getAllNotificationsByUserId(String userId);
 
-    List<NotificationDTO> getUnreadNotificationsByUserId(Long userId);
+    List<NotificationDTO> getUnreadNotificationsByUserId(String userId);
 
-    void markNotificationAsRead(Long notificationId);
+    void markNotificationAsRead(String notificationId);
 
-    void markAllNotificationsAsRead(Long userId);
+    void markAllNotificationsAsRead(String userId);
 
-    int getUnreadCount(Long userId);
+    int getUnreadCount(String userId);
 
-    void deleteNotification(Long notificationId);
+    void deleteNotification(String notificationId);
 
     
     

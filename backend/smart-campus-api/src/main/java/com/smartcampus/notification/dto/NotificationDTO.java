@@ -6,11 +6,11 @@ import com.smartcampus.notification.model.NotificationType;
 
 public class NotificationDTO {
 
-    private Long id;
-    private Long userId;
+    private String id;
+    private String userId;
     private NotificationType type;
     private String message;
-    private Long referenceId;
+    private String referenceId;
     private Boolean isRead;
     private LocalDateTime createdAt;
 
@@ -18,11 +18,11 @@ public class NotificationDTO {
 
     // GETTERS 
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
@@ -34,7 +34,7 @@ public class NotificationDTO {
         return message;
     }
 
-    public Long getReferenceId() {
+    public String getReferenceId() {
         return referenceId;
     }
 
@@ -52,11 +52,11 @@ public class NotificationDTO {
 
     // SETTERS
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -68,7 +68,7 @@ public class NotificationDTO {
         this.message = message;
     }
 
-    public void setReferenceId(Long referenceId) {
+    public void setReferenceId(String referenceId) {
         this.referenceId = referenceId;
     }
 

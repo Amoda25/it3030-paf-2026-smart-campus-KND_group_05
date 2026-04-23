@@ -4,7 +4,7 @@ public class TicketCreateDTO {
     private String title;
     private String description;
     private String priority;
-    private Long resourceId;
+    private String resourceId;
 
     public TicketCreateDTO() {
     }
@@ -21,7 +21,7 @@ public class TicketCreateDTO {
         return priority;
     }
 
-    public Long getResourceId() {
+    public String getResourceId() {
         return resourceId;
     }
 
@@ -37,7 +37,7 @@ public class TicketCreateDTO {
         this.priority = priority;
     }
 
-    public void setResourceId(Long resourceId) {
+    public void setResourceId(String resourceId) {
         this.resourceId = resourceId;
     }
 }

@@ -27,7 +27,7 @@ public class ResourceService {
                 .collect(Collectors.toList());
     }
 
-    public ResourceResponseDTO getResourceById(Long id) {
+    public ResourceResponseDTO getResourceById(String id) {
         Resource resource = resourceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Resource not found with id: " + id));
 
@@ -48,7 +48,7 @@ public class ResourceService {
         return mapToResponseDTO(savedResource);
     }
 
-    public ResourceResponseDTO updateResource(Long id, ResourceRequestDTO requestDTO) {
+    public ResourceResponseDTO updateResource(String id, ResourceRequestDTO requestDTO) {
         Resource existingResource = resourceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Resource not found with id: " + id));
 
@@ -64,7 +64,7 @@ public class ResourceService {
         return mapToResponseDTO(updatedResource);
     }
 
-    public void deleteResource(Long id) {
+    public void deleteResource(String id) {
         Resource existingResource = resourceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Resource not found with id: " + id));
 

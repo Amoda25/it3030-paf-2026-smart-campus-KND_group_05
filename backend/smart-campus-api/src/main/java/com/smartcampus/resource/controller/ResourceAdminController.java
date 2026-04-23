@@ -27,7 +27,7 @@ public class ResourceAdminController {
             @Valid @RequestBody ResourceRequestDTO requestDTO,
             @AuthenticationPrincipal UserDetails userDetails) {  // ← ADD THIS PARAMETER
         
-        Long adminId = Long.parseLong(userDetails.getUsername());  // ← Get admin ID from JWT
+        String adminId = userDetails.getUsername();  // ← Get admin ID from JWT
         System.out.println("Admin ID: " + adminId + " is creating a resource");
         
         ResourceResponseDTO createdResource = resourceService.createResource(requestDTO);
@@ -36,11 +36,11 @@ public class ResourceAdminController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResourceResponseDTO> updateResource(
-            @PathVariable Long id,
+            @PathVariable String id,
             @Valid @RequestBody ResourceRequestDTO requestDTO,
             @AuthenticationPrincipal UserDetails userDetails) {  // ← ADD THIS PARAMETER
         
-        Long adminId = Long.parseLong(userDetails.getUsername());
+        String adminId = userDetails.getUsername();
         System.out.println("Admin ID: " + adminId + " is updating resource " + id);
         
         ResourceResponseDTO updatedResource = resourceService.updateResource(id, requestDTO);
@@ -49,10 +49,10 @@ public class ResourceAdminController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteResource(
-            @PathVariable Long id,
+            @PathVariable String id,
             @AuthenticationPrincipal UserDetails userDetails) {  // ← ADD THIS PARAMETER
         
-        Long adminId = Long.parseLong(userDetails.getUsername());
+        String adminId = userDetails.getUsername();
         System.out.println("Admin ID: " + adminId + " is deleting resource " + id);
         
         resourceService.deleteResource(id);

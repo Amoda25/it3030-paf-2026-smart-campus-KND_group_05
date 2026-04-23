@@ -8,11 +8,11 @@ import com.smartcampus.ticket.model.Comment;
 
 public interface CommentService {
 
-    Comment addComment(Long ticketId, CommentCreateDTO dto, Long currentUserId);
+    Comment addComment(String ticketId, CommentCreateDTO dto, String currentUserId);
 
-    List<Comment> getCommentsByTicketId(Long ticketId);
+    List<Comment> getCommentsByTicketId(String ticketId);
 
-    Comment updateComment(Long commentId, CommentUpdateDTO dto, Long currentUserId);
+    Comment updateComment(String commentId, CommentUpdateDTO dto, String currentUserId);
 
-    void deleteComment(Long commentId, Long currentUserId);
+    void deleteComment(String commentId, String currentUserId);
 }

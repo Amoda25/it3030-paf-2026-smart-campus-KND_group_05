@@ -31,13 +31,13 @@ public class JwtService {
             .compact();
     }
     
-    public Long extractUserId(String token) {
-        return Long.parseLong(Jwts.parserBuilder()
+    public String extractUserId(String token) {
+        return Jwts.parserBuilder()
             .setSigningKey(getSigningKey())
             .build()
             .parseClaimsJws(token)
             .getBody()
-            .getSubject());
+            .getSubject();
     }
     
     public String extractEmail(String token) {

@@ -7,26 +7,26 @@ import com.smartcampus.ticket.dto.TicketResponseDTO;
 
 public interface TicketService {
 
-    TicketResponseDTO createTicket(TicketCreateDTO dto, Long currentUserId);
+    TicketResponseDTO createTicket(TicketCreateDTO dto, String currentUserId);
 
-    List<TicketResponseDTO> getMyTickets(Long currentUserId);
+    List<TicketResponseDTO> getMyTickets(String currentUserId);
 
-    TicketResponseDTO getTicketById(Long ticketId, Long currentUserId);
+    TicketResponseDTO getTicketById(String ticketId, String currentUserId);
 
     List<TicketResponseDTO> getAllTickets();
 
-    void assignTechnician(Long ticketId, Long technicianId);
+    void assignTechnician(String ticketId, String technicianId);
 
-    List<TicketResponseDTO> getAssignedTickets(Long technicianId);
+    List<TicketResponseDTO> getAssignedTickets(String technicianId);
 
-    void updateTicketStatus(Long ticketId, String status, Long technicianId);
+    void updateTicketStatus(String ticketId, String status, String technicianId);
 
-    void updateResolution(Long ticketId, String resolutionNotes, Long technicianId);
+    void updateResolution(String ticketId, String resolutionNotes, String technicianId);
 
-    void deleteTicket(Long ticketId);
+    void deleteTicket(String ticketId);
     
-    void deleteTicketForTechnician(Long ticketId, Long technicianId);
+    void deleteTicketForTechnician(String ticketId, String technicianId);
 
-    void deleteTicketForUser(Long ticketId, Long userId);
+    void deleteTicketForUser(String ticketId, String userId);
 
 }

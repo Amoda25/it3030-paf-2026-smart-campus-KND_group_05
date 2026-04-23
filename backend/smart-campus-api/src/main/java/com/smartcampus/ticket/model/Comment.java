@@ -1,43 +1,27 @@
 package com.smartcampus.ticket.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "comments")
+@Document(collection = "comments")
 public class Comment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(name = "ticket_id", nullable = false)
-    private Long ticketId;
+    private String ticketId;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private String userId;
 
-    @Column(name = "message", nullable = false, columnDefinition = "TEXT")
     private String message;
-
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = true)
     private LocalDateTime updatedAt;
 
     public Comment() {
     }
 
-    public Comment(Long id, Long ticketId, Long userId, String message, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Comment(String id, String ticketId, String userId, String message, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.ticketId = ticketId;
         this.userId = userId;
@@ -46,25 +30,23 @@ public class Comment {
         this.updatedAt = updatedAt;
     }
 
-    @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 
-    @PreUpdate
     public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public Long getTicketId() {
+    public String getTicketId() {
         return ticketId;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
@@ -80,15 +62,15 @@ public class Comment {
         return updatedAt;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public void setTicketId(Long ticketId) {
+    public void setTicketId(String ticketId) {
         this.ticketId = ticketId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

@@ -1,49 +1,34 @@
 package com.smartcampus.user.model;
 
 import com.smartcampus.security.roles.Role;
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "users")
+@Document(collection = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, unique = true, length = 100)
-    private String email;
-
-    @Column(nullable = false, length = 100)
-    private String name;
-
-    @Column(length = 255)
-    private String password;  // For manual login
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private Role role;
-
-    @Column(name = "google_id", length = 100)
-    private String googleId;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "last_login")
-    private LocalDateTime lastLogin;
 
     public User() {
     }
 
-    @PrePersist
+    private String email;
+    private String name;
+    private String password;
+    private Role role;
+    private String googleId;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastLogin;
+
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
 
     // Getters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -76,7 +61,7 @@ public class User {
     }
 
     // Setters
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

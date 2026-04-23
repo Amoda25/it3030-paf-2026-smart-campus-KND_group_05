@@ -39,11 +39,11 @@ public class CommentController {
     @PostMapping("/ticket/{ticketId}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Comment> addComment(
-            @PathVariable Long ticketId,
+            @PathVariable String ticketId,
             @RequestBody CommentCreateDTO dto,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        Long currentUserId = extractUserId(userDetails);
+        String currentUserId = extractUserId(userDetails);
         Comment comment = commentService.addComment(ticketId, dto, currentUserId);
         return ResponseEntity.ok(comment);
     }
@@ -55,7 +55,7 @@ public class CommentController {
     @GetMapping("/ticket/{ticketId}")
     @PreAuthorize("hasAnyRole('USER', 'TECHNICIAN')")
     public ResponseEntity<List<Comment>> getComments(
-            @PathVariable Long ticketId
+            @PathVariable String ticketId
     ) {
         return ResponseEntity.ok(commentService.getCommentsByTicketId(ticketId));
     }
@@ -67,11 +67,11 @@ public class CommentController {
     @PutMapping("/{commentId}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Comment> updateComment(
-            @PathVariable Long commentId,
+            @PathVariable String commentId,
             @RequestBody CommentUpdateDTO dto,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        Long currentUserId = extractUserId(userDetails);
+        String currentUserId = extractUserId(userDetails);
         Comment updated = commentService.updateComment(commentId, dto, currentUserId);
         return ResponseEntity.ok(updated);
     }
@@ -83,10 +83,10 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> deleteComment(
-            @PathVariable Long commentId,
+            @PathVariable String commentId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        Long currentUserId = extractUserId(userDetails);
+        String currentUserId = extractUserId(userDetails);
         commentService.deleteComment(commentId, currentUserId);
         return ResponseEntity.noContent().build();
     }
@@ -94,10 +94,10 @@ public class CommentController {
     /**
      * Extracts the numeric userId stored as the username in the JWT-backed UserDetails.
      */
-    private Long extractUserId(UserDetails userDetails) {
+    private String extractUserId(UserDetails userDetails) {
         if (userDetails == null) {
             throw new RuntimeException("User not authenticated");
         }
-        return Long.parseLong(userDetails.getUsername());
+        return userDetails.getUsername();
     }
 }

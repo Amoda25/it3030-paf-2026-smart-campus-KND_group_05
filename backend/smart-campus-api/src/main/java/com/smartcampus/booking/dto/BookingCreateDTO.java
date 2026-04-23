@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class BookingCreateDTO {
     
     @NotNull(message = "Resource ID is required")
-    private Long resourceId;
+    private String resourceId;
     
     @NotNull(message = "Start time is required")
     @Future(message = "Start time must be in the future")
@@ -24,8 +24,8 @@ public class BookingCreateDTO {
     private Integer attendees;
     
     // Getters and Setters
-    public Long getResourceId() { return resourceId; }
-    public void setResourceId(Long resourceId) { this.resourceId = resourceId; }
+    public String getResourceId() { return resourceId; }
+    public void setResourceId(String resourceId) { this.resourceId = resourceId; }
     
     public LocalDateTime getStartTime() { return startTime; }
     public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }

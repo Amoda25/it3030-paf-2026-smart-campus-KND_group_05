@@ -2,8 +2,8 @@ package com.smartcampus.ticket.dto;
 
 public class TicketImageResponseDTO {
 
-    private Long id;
-    private Long ticketId;
+    private String id;
+    private String ticketId;
     private String fileName;
     private String imageUrl;
     private Long fileSize;
@@ -12,11 +12,11 @@ public class TicketImageResponseDTO {
     public TicketImageResponseDTO() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public Long getTicketId() {
+    public String getTicketId() {
         return ticketId;
     }
 
@@ -36,11 +36,11 @@ public class TicketImageResponseDTO {
         return uploadedAt;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public void setTicketId(Long ticketId) {
+    public void setTicketId(String ticketId) {
         this.ticketId = ticketId;
     }
 

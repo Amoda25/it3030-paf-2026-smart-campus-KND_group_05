@@ -23,7 +23,7 @@ public class ResourceUserController {
     public ResponseEntity<List<ResourceResponseDTO>> getAllResources(
             @AuthenticationPrincipal UserDetails userDetails) {  // ← ADD THIS PARAMETER (optional)
         
-        Long userId = Long.parseLong(userDetails.getUsername());  // ← Get user ID from JWT
+        String userId = userDetails.getUsername();  // ← Get user ID from JWT
         System.out.println("User ID: " + userId + " is viewing all resources");
         
         return ResponseEntity.ok(resourceService.getAllResources());
@@ -31,10 +31,10 @@ public class ResourceUserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ResourceResponseDTO> getResourceById(
-            @PathVariable Long id,
+            @PathVariable String id,
             @AuthenticationPrincipal UserDetails userDetails) {  // ← ADD THIS PARAMETER (optional)
         
-        Long userId = Long.parseLong(userDetails.getUsername());
+        String userId = userDetails.getUsername();
         System.out.println("User ID: " + userId + " is viewing resource " + id);
         
         return ResponseEntity.ok(resourceService.getResourceById(id));

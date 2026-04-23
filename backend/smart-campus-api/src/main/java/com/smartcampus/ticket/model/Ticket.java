@@ -1,52 +1,32 @@
 package com.smartcampus.ticket.model;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "tickets")
+@Document(collection = "tickets")
 public class Ticket {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, length = 200)
     private String title;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
-
-    @Column(length = 20)
     private String priority;
-
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20)
     private TicketStatus status;
+    private String createdBy;
+    private String resourceId;
+    private String assignedTo;
 
-    @Column(name = "created_by", nullable = false)
-    private Long createdBy;
-
-    @Column(name = "resource_id")
-    private Long resourceId;
-
-    @Column(name = "assigned_to")
-    private Long assignedTo;
-
-    @Column(name = "resolution_notes", columnDefinition = "TEXT")
     private String resolutionNotes;
-
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     public Ticket() {
     }
 
-    public Ticket(Long id, String title, String description, String priority, TicketStatus status,
-                  Long createdBy, Long resourceId, Long assignedTo, String resolutionNotes,
+    public Ticket(String id, String title, String description, String priority, TicketStatus status,
+                  String createdBy, String resourceId, String assignedTo, String resolutionNotes,
                   LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.title = title;
@@ -61,11 +41,11 @@ public class Ticket {
         this.updatedAt = updatedAt;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -101,27 +81,27 @@ public class Ticket {
         this.status = status;
     }
 
-    public Long getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Long createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Long getResourceId() {
+    public String getResourceId() {
         return resourceId;
     }
 
-    public void setResourceId(Long resourceId) {
+    public void setResourceId(String resourceId) {
         this.resourceId = resourceId;
     }
 
-    public Long getAssignedTo() {
+    public String getAssignedTo() {
         return assignedTo;
     }
 
-    public void setAssignedTo(Long assignedTo) {
+    public void setAssignedTo(String assignedTo) {
         this.assignedTo = assignedTo;
     }
 

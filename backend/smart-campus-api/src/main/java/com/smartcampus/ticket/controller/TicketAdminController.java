@@ -43,7 +43,7 @@ public class TicketAdminController {
     public ResponseEntity<List<TicketResponseDTO>> getAllTickets(
             @AuthenticationPrincipal UserDetails userDetails) {  // ← ADD THIS PARAMETER
         
-        Long adminId = Long.parseLong(userDetails.getUsername());  // ← Get admin ID from JWT
+        String adminId = userDetails.getUsername();  // ← Get admin ID from JWT
         System.out.println("Admin ID: " + adminId + " is viewing all tickets");
         
         return ResponseEntity.ok(ticketService.getAllTickets());
@@ -55,11 +55,11 @@ public class TicketAdminController {
 
     @PutMapping("/{id}/assign")
     public ResponseEntity<String> assignTechnician(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestBody TicketAssignDTO dto,
             @AuthenticationPrincipal UserDetails userDetails) {  // ← ADD THIS PARAMETER
         
-        Long adminId = Long.parseLong(userDetails.getUsername());
+        String adminId = userDetails.getUsername();
         System.out.println("Admin ID: " + adminId + " is assigning technician to ticket " + id);
         
         ticketService.assignTechnician(id, dto.getTechnicianId());
@@ -68,10 +68,10 @@ public class TicketAdminController {
 
     @GetMapping("/{id}/images")
     public ResponseEntity<List<TicketImageResponseDTO>> getTicketImagesForAdmin(
-            @PathVariable Long id,
+            @PathVariable String id,
             @AuthenticationPrincipal UserDetails userDetails) {  // ← ADD THIS PARAMETER
         
-        Long adminId = Long.parseLong(userDetails.getUsername());
+        String adminId = userDetails.getUsername();
         System.out.println("Admin ID: " + adminId + " is viewing images for ticket " + id);
         
         return ResponseEntity.ok(ticketImageService.getImagesByTicketIdForAdmin(id));
@@ -79,10 +79,10 @@ public class TicketAdminController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTicket(
-            @PathVariable Long id,
+            @PathVariable String id,
             @AuthenticationPrincipal UserDetails userDetails) {  // ← ADD THIS PARAMETER
         
-        Long adminId = Long.parseLong(userDetails.getUsername());
+        String adminId = userDetails.getUsername();
         System.out.println("Admin ID: " + adminId + " is deleting ticket " + id);
         
         ticketService.deleteTicket(id);

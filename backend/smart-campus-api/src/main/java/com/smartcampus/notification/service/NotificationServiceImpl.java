@@ -22,7 +22,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void createNotification(Long userId, NotificationType type, String message, Long referenceId) {
+    public void createNotification(String userId, NotificationType type, String message, String referenceId) {
         Notification notification = new Notification();
         notification.setUserId(userId);
         notification.setType(type);
@@ -37,13 +37,13 @@ public class NotificationServiceImpl implements NotificationService {
     
 
     @Override
-    public List<NotificationDTO> getAllNotificationsByUserId(Long userId) {
+    public List<NotificationDTO> getAllNotificationsByUserId(String userId) {
         List<Notification> notifications = notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
         return notifications.stream().map(this::mapToDTO).toList();
     }
 
     @Override
-    public List<NotificationDTO> getUnreadNotificationsByUserId(Long userId) {
+    public List<NotificationDTO> getUnreadNotificationsByUserId(String userId) {
         List<Notification> notifications = notificationRepository.findByUserIdAndIsReadFalseOrderByCreatedAtDesc(userId);
         return notifications.stream().map(this::mapToDTO).toList();
     }
@@ -89,7 +89,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void markNotificationAsRead(Long notificationId) {
+    public void markNotificationAsRead(String notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found"));
 
@@ -98,7 +98,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void markAllNotificationsAsRead(Long userId) {
+    public void markAllNotificationsAsRead(String userId) {
         List<Notification> notifications = notificationRepository.findByUserIdAndIsReadFalseOrderByCreatedAtDesc(userId);
 
         for (Notification notification : notifications) {
@@ -109,7 +109,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public int getUnreadCount(Long userId) {
+    public int getUnreadCount(String userId) {
         return notificationRepository
                 .findByUserIdAndIsReadFalseOrderByCreatedAtDesc(userId)
                 .size();
@@ -117,7 +117,7 @@ public class NotificationServiceImpl implements NotificationService {
 
 
     @Override
-    public void deleteNotification(Long notificationId) {
+    public void deleteNotification(String notificationId) {
         notificationRepository.deleteById(notificationId);
     }
 }

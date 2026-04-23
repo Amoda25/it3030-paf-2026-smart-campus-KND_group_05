@@ -36,11 +36,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println("DEBUG: JwtFilter detected Bearer token for path: " + path);
             
             if (jwtService.validateToken(token)) {
-                Long userId = jwtService.extractUserId(token);
+                String userId = jwtService.extractUserId(token);
                 String role = jwtService.extractRole(token);
                 
                 UserDetails userDetails = User.builder()
-                    .username(userId.toString())
+                    .username(userId)
                     .password("")
                     .roles(role)
                     .build();

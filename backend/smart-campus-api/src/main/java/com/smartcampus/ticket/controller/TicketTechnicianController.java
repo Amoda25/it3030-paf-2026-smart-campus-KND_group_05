@@ -44,7 +44,7 @@ public class TicketTechnicianController {
     public ResponseEntity<List<TicketResponseDTO>> getAssignedTickets(
             @AuthenticationPrincipal UserDetails userDetails) {
         
-        Long technicianId = extractUserId(userDetails);
+        String technicianId = extractUserId(userDetails);
         System.out.println("Technician ID: " + technicianId + " is viewing assigned tickets");
         
         return ResponseEntity.ok(ticketService.getAssignedTickets(technicianId));
@@ -52,11 +52,11 @@ public class TicketTechnicianController {
 
     @PutMapping("/{id}/status")
     public ResponseEntity<String> updateTicketStatus(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestBody TicketStatusUpdateDTO dto,
             @AuthenticationPrincipal UserDetails userDetails) {
         
-        Long technicianId = extractUserId(userDetails);
+        String technicianId = extractUserId(userDetails);
         System.out.println("Technician ID: " + technicianId + " is updating ticket " + id + " status to " + dto.getStatus());
         
         ticketService.updateTicketStatus(id, dto.getStatus(), technicianId);
@@ -65,11 +65,11 @@ public class TicketTechnicianController {
 
     @PutMapping("/{id}/resolution")
     public ResponseEntity<String> updateResolution(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestBody TicketResolutionDTO dto,
             @AuthenticationPrincipal UserDetails userDetails) {
         
-        Long technicianId = extractUserId(userDetails);
+        String technicianId = extractUserId(userDetails);
         System.out.println("Technician ID: " + technicianId + " is adding resolution to ticket " + id);
         
         ticketService.updateResolution(id, dto.getResolutionNotes(), technicianId);
@@ -78,10 +78,10 @@ public class TicketTechnicianController {
 
     @GetMapping("/{id}/images")
     public ResponseEntity<List<TicketImageResponseDTO>> getTicketImages(
-            @PathVariable Long id,
+            @PathVariable String id,
             @AuthenticationPrincipal UserDetails userDetails) {
         
-        Long technicianId = extractUserId(userDetails);
+        String technicianId = extractUserId(userDetails);
         System.out.println("Technician ID: " + technicianId + " is viewing images for ticket " + id);
         
         return ResponseEntity.ok(ticketImageService.getImagesByTicketIdForTechnician(id, technicianId));
@@ -89,23 +89,23 @@ public class TicketTechnicianController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTicket(
-            @PathVariable Long id,
+            @PathVariable String id,
             @AuthenticationPrincipal UserDetails userDetails) {
         
-        Long technicianId = extractUserId(userDetails);
+        String technicianId = extractUserId(userDetails);
         System.out.println("Technician ID: " + technicianId + " is deleting ticket " + id);
         
         ticketService.deleteTicketForTechnician(id, technicianId);
         return ResponseEntity.ok("Ticket deleted successfully");
     }
 
-    private Long extractUserId(UserDetails userDetails) {
+    private String extractUserId(UserDetails userDetails) {
         if (userDetails == null) {
             throw new RuntimeException("User not authenticated");
         }
         String username = userDetails.getUsername();
         try {
-            return Long.parseLong(username);
+            return username;
         } catch (NumberFormatException e) {
             return userRepository.findByEmail(username)
                     .orElseThrow(() -> new RuntimeException("Technician not found: " + username))

@@ -44,7 +44,7 @@ public class BookingService {
     /**
      * Create a new booking request
      */
-    public BookingResponseDTO createBooking(BookingCreateDTO dto, Long userId) {
+    public BookingResponseDTO createBooking(BookingCreateDTO dto, String userId) {
         // Validate time range
         if (!conflictService.isValidTimeRange(dto.getStartTime(), dto.getEndTime())) {
             throw new IllegalArgumentException("Start time must be before end time");
@@ -101,7 +101,7 @@ public class BookingService {
     /**
      * Get all bookings for the current user
      */
-    public List<BookingResponseDTO> getUserBookings(Long userId) {
+    public List<BookingResponseDTO> getUserBookings(String userId) {
         return bookingRepository.findByUserIdOrderByStartTimeDesc(userId)
             .stream()
             .map(BookingResponseDTO::fromEntity)
@@ -111,7 +111,7 @@ public class BookingService {
     /**
      * Get a single booking for the current user (with ownership check)
      */
-    public BookingResponseDTO getUserBookingById(Long bookingId, Long userId) {
+    public BookingResponseDTO getUserBookingById(String bookingId, String userId) {
         Booking booking = bookingRepository.findByIdAndUserId(bookingId, userId)
             .orElseThrow(() -> new EntityNotFoundException("Booking not found or not owned by user"));
         return BookingResponseDTO.fromEntity(booking);
@@ -120,7 +120,7 @@ public class BookingService {
     /**
      * Cancel a booking (only if it's PENDING or APPROVED)
      */
-    public BookingResponseDTO cancelBooking(Long bookingId, Long userId) {
+    public BookingResponseDTO cancelBooking(String bookingId, String userId) {
         Booking booking = bookingRepository.findByIdAndUserId(bookingId, userId)
             .orElseThrow(() -> new EntityNotFoundException("Booking not found or not owned by user"));
         
@@ -169,7 +169,7 @@ public class BookingService {
     /**
      * Approve a booking
      */
-    public BookingResponseDTO approveBooking(Long bookingId) {
+    public BookingResponseDTO approveBooking(String bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
             .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
         
@@ -204,7 +204,7 @@ public class BookingService {
     /**
      * Reject a booking with a reason
      */
-    public BookingResponseDTO rejectBooking(Long bookingId, String reason) {
+    public BookingResponseDTO rejectBooking(String bookingId, String reason) {
         Booking booking = bookingRepository.findById(bookingId)
             .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
         
@@ -231,7 +231,7 @@ public class BookingService {
     /**
      * Get a single booking by ID (admin)
      */
-    public BookingResponseDTO getBookingById(Long bookingId) {
+    public BookingResponseDTO getBookingById(String bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
             .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
         return BookingResponseDTO.fromEntity(booking);
@@ -240,7 +240,7 @@ public class BookingService {
     /**
      * Delete a booking (admin)
      */
-    public void deleteBooking(Long bookingId) {
+    public void deleteBooking(String bookingId) {
         if (!bookingRepository.existsById(bookingId)) {
             throw new EntityNotFoundException("Booking not found");
         }

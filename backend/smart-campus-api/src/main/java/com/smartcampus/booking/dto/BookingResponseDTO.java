@@ -5,9 +5,9 @@ import com.smartcampus.booking.model.BookingStatus;
 import java.time.LocalDateTime;
 
 public class BookingResponseDTO {
-    private Long id;
-    private Long resourceId;
-    private Long userId;
+    private String id;
+    private String resourceId;
+    private String userId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String purpose;
@@ -34,14 +34,14 @@ public class BookingResponseDTO {
     }
     
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
     
-    public Long getResourceId() { return resourceId; }
-    public void setResourceId(Long resourceId) { this.resourceId = resourceId; }
+    public String getResourceId() { return resourceId; }
+    public void setResourceId(String resourceId) { this.resourceId = resourceId; }
     
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
     
     public LocalDateTime getStartTime() { return startTime; }
     public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }

@@ -36,7 +36,7 @@ public class TicketImageServiceImpl implements TicketImageService {
     }   
 
     @Override
-    public List<TicketImage> uploadImages(Long ticketId, List<MultipartFile> files) {
+    public List<TicketImage> uploadImages(String ticketId, List<MultipartFile> files) {
 
         System.out.println("Files received: " + (files == null ? 0 : files.size()));
 
@@ -97,7 +97,7 @@ public class TicketImageServiceImpl implements TicketImageService {
 
 
     @Override
-    public List<TicketImageResponseDTO> getImagesByTicketId(Long ticketId, Long currentUserId) {
+    public List<TicketImageResponseDTO> getImagesByTicketId(String ticketId, String currentUserId) {
 
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ticket not found"));
@@ -127,7 +127,7 @@ public class TicketImageServiceImpl implements TicketImageService {
 
 
     @Override
-    public List<TicketImageResponseDTO> getImagesByTicketIdForTechnician(Long ticketId, Long technicianId) {
+    public List<TicketImageResponseDTO> getImagesByTicketIdForTechnician(String ticketId, String technicianId) {
 
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ticket not found"));
@@ -155,7 +155,7 @@ public class TicketImageServiceImpl implements TicketImageService {
     }
 
     @Override
-    public List<TicketImageResponseDTO> getImagesByTicketIdForAdmin(Long ticketId) {
+    public List<TicketImageResponseDTO> getImagesByTicketIdForAdmin(String ticketId) {
 
         ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ticket not found"));

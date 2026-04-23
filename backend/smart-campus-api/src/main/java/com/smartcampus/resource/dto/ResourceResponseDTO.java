@@ -2,7 +2,7 @@ package com.smartcampus.resource.dto;
 
 public class ResourceResponseDTO {
 
-    private Long id;
+    private String id;
     private String name;
     private String type;
     private String location;
@@ -13,7 +13,7 @@ public class ResourceResponseDTO {
     public ResourceResponseDTO() {
     }
 
-    public ResourceResponseDTO(Long id, String name, String type, String location,
+    public ResourceResponseDTO(String id, String name, String type, String location,
                                Integer capacity, String status, String description) {
         this.id = id;
         this.name = name;
@@ -24,7 +24,7 @@ public class ResourceResponseDTO {
         this.description = description;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -52,7 +52,7 @@ public class ResourceResponseDTO {
         return description;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

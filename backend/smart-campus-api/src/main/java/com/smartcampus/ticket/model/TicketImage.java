@@ -1,35 +1,26 @@
 package com.smartcampus.ticket.model;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "images")
+@Document(collection = "ticket_images")
 public class TicketImage {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(name = "ticket_id", nullable = false)
-    private Long ticketId;
+    private String ticketId;
 
-    @Column(name = "file_name", nullable = false)
     private String fileName;
-
-    @Column(name = "file_path", nullable = false, length = 500)
     private String filePath;
-
-    @Column(name = "file_size")
     private Long fileSize;
-
-    @Column(name = "uploaded_at")
     private LocalDateTime uploadedAt;
 
     public TicketImage() {
     }
 
-    public TicketImage(Long id, Long ticketId, String fileName, String filePath, Long fileSize, LocalDateTime uploadedAt) {
+    public TicketImage(String id, String ticketId, String fileName, String filePath, Long fileSize, LocalDateTime uploadedAt) {
         this.id = id;
         this.ticketId = ticketId;
         this.fileName = fileName;
@@ -38,11 +29,11 @@ public class TicketImage {
         this.uploadedAt = uploadedAt;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public Long getTicketId() {
+    public String getTicketId() {
         return ticketId;
     }
 
@@ -62,11 +53,11 @@ public class TicketImage {
         return uploadedAt;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public void setTicketId(Long ticketId) {
+    public void setTicketId(String ticketId) {
         this.ticketId = ticketId;
     }
 

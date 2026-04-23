@@ -18,7 +18,7 @@ public class BookingConflictService {
     /**
      * Check if a booking conflicts with existing approved/pending bookings
      */
-    public boolean hasConflict(Long resourceId, LocalDateTime startTime, LocalDateTime endTime) {
+    public boolean hasConflict(String resourceId, LocalDateTime startTime, LocalDateTime endTime) {
         List<Booking> conflicting = bookingRepository.findConflictingBookings(
             resourceId, startTime, endTime
         );
@@ -28,8 +28,8 @@ public class BookingConflictService {
     /**
      * Check if a booking conflicts (excluding a specific booking ID for updates)
      */
-    public boolean hasConflictExcludingId(Long resourceId, LocalDateTime startTime, 
-                                          LocalDateTime endTime, Long excludeId) {
+    public boolean hasConflictExcludingId(String resourceId, LocalDateTime startTime, 
+                                          LocalDateTime endTime, String excludeId) {
         List<Booking> conflicting = bookingRepository.findConflictingBookingsExcludingId(
             resourceId, startTime, endTime, excludeId
         );
@@ -39,7 +39,7 @@ public class BookingConflictService {
     /**
      * Get all conflicting bookings for a given time slot
      */
-    public List<Booking> getConflictingBookings(Long resourceId, LocalDateTime startTime, 
+    public List<Booking> getConflictingBookings(String resourceId, LocalDateTime startTime, 
                                                  LocalDateTime endTime) {
         return bookingRepository.findConflictingBookings(resourceId, startTime, endTime);
     }

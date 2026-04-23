@@ -1,51 +1,31 @@
 package com.smartcampus.notification.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "notifications")
+@Document(collection = "notifications")
 public class Notification {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private String userId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private NotificationType type;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
     private String message;
-
-    @Column(name = "reference_id")
-    private Long referenceId;
-
-    @Column(name = "is_read", nullable = false)
+    private String referenceId;
     private Boolean isRead = false;
-
-    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     public Notification() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
@@ -57,7 +37,7 @@ public class Notification {
         return message;
     }
 
-    public Long getReferenceId() {
+    public String getReferenceId() {
         return referenceId;
     }
 
@@ -69,11 +49,11 @@ public class Notification {
         return createdAt;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -85,7 +65,7 @@ public class Notification {
         this.message = message;
     }
 
-    public void setReferenceId(Long referenceId) {
+    public void setReferenceId(String referenceId) {
         this.referenceId = referenceId;
     }
 

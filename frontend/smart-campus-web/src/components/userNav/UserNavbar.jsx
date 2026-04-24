@@ -1,10 +1,17 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./UserNavbar.css";
 import NotificationBell from "../notifications/NotificationBell"; 
 
 export default function UserNavbar() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/");
+  };
 
   return (
     <nav className="user-navbar">
@@ -66,6 +73,9 @@ export default function UserNavbar() {
         </Link>
 
         <NotificationBell />
+        <button className="logout-btn" onClick={handleLogout} style={{ background: 'transparent', border: 'none', color: '#ff4d4f', cursor: 'pointer', fontWeight: 'bold', marginLeft: '1rem' }}>
+          Logout
+        </button>
       </div>
     </nav>
   );

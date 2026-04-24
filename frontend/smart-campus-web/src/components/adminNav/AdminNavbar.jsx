@@ -1,10 +1,17 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./AdminNavbar.css";
 import NotificationBell from "../notifications/NotificationBell"; 
 
 export default function AdminNavbar() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/");
+  };
 
   return (
     <nav className="admin-navbar">
@@ -13,7 +20,7 @@ export default function AdminNavbar() {
       </div>
 
       <div className="admin-navbar-links">
-        <Link className={pathname.includes("/admin/dashboard") ? "active" : ""} to="/admin/dashboard">
+        <Link className={pathname === "/admin/dashboard" ? "active" : ""} to="/admin/dashboard">
           Dashboard
         </Link>
         <Link className={pathname.includes("/admin/resources") ? "active" : ""} to="/admin/resources">
@@ -25,10 +32,10 @@ export default function AdminNavbar() {
         <Link className={pathname.includes("/admin/tickets") ? "active" : ""} to="/admin/tickets">
           Tickets
         </Link>
-        <Link className={pathname.includes("/admin/users") ? "active" : ""} to="/admin/users">
-          Users
-        </Link>
         <NotificationBell />
+        <button className="logout-btn" onClick={handleLogout} style={{ background: 'transparent', border: 'none', color: '#ff4d4f', cursor: 'pointer', fontWeight: 'bold', marginLeft: '1rem' }}>
+          Logout
+        </button>
       </div>
       
     </nav>

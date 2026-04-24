@@ -49,8 +49,10 @@ public class UserService {
         }
 
         // Single query: if no admin exists yet, first user becomes admin
-        boolean adminExists = userRepository.existsByRole(Role.ADMIN);
-        user.setRole(adminExists ? Role.USER : Role.ADMIN);
+        if (user.getRole() == null) {
+            boolean adminExists = userRepository.existsByRole(Role.ADMIN);
+            user.setRole(adminExists ? Role.USER : Role.ADMIN);
+        }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);

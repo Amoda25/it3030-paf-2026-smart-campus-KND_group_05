@@ -51,6 +51,14 @@ public class AuthController {
             user.setEmail(registerRequest.getEmail());
             user.setPassword(registerRequest.getPassword());
             
+            if (registerRequest.getRole() != null && !registerRequest.getRole().isEmpty()) {
+                try {
+                    user.setRole(com.smartcampus.security.roles.Role.valueOf(registerRequest.getRole().toUpperCase()));
+                } catch (IllegalArgumentException e) {
+                    System.err.println("AUTH: Invalid role provided: " + registerRequest.getRole());
+                }
+            }
+            
             userService.registerUser(user);
             System.out.println("AUTH: Registration successful for " + registerRequest.getEmail());
             return ResponseEntity.ok("User registered successfully");

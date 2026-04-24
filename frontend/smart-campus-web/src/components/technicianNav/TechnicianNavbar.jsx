@@ -1,10 +1,17 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./TechnicianNavbar.css";
 import NotificationBell from "../notifications/NotificationBell"; 
 
 export default function TechnicianNavbar() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/");
+  };
 
   return (
     <nav className="technician-navbar">
@@ -40,6 +47,9 @@ export default function TechnicianNavbar() {
           Assigned Tickets
         </Link>
         <NotificationBell />
+        <button className="logout-btn" onClick={handleLogout} style={{ background: 'transparent', border: 'none', color: '#ff4d4f', cursor: 'pointer', fontWeight: 'bold', marginLeft: '1rem' }}>
+          Logout
+        </button>
       </div>
       
         

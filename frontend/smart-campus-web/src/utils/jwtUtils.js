@@ -15,6 +15,9 @@ export const decodeToken = (token) => {
 };
 
 export const getUserRole = () => {
+  const localRole = localStorage.getItem("role");
+  if (localRole) return localRole;
+
   const token = localStorage.getItem("token");
   const decoded = decodeToken(token);
   return decoded ? decoded.role : null;

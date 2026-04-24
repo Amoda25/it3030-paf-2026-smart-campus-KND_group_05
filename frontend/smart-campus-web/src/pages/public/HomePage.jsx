@@ -127,9 +127,8 @@ export default function HomePage() {
           <div className="hero-ctas">
             <Link to="/login"    className="cta-filled">Get Started →</Link>
             <Link to="/register" className="cta-outline">Create Account</Link>
+            <Link to="/login?role=admin" className="cta-admin">Admin Login</Link>
           </div>
-
-
         </div>
 
         <div className="hero-ticker">

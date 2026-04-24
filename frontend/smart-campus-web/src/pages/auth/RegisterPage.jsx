@@ -10,6 +10,7 @@ const RegisterPage = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "USER",
   });
 
   const [errors, setErrors] = useState({});
@@ -47,6 +48,11 @@ const RegisterPage = () => {
       isValid = false;
     }
 
+    if (!formData.role) {
+      newErrors.role = "Please select a role";
+      isValid = false;
+    }
+
     setErrors(newErrors);
     return isValid;
   };
@@ -74,7 +80,8 @@ const RegisterPage = () => {
       const userData = {
         name: formData.fullName,
         email: formData.email,
-        password: formData.password
+        password: formData.password,
+        role: formData.role
       };
       
       const response = await register(userData);
@@ -102,7 +109,7 @@ const RegisterPage = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8080/oauth2/authorization/google";
+    window.location.href = "http://localhost:8081/oauth2/authorization/google";
   };
 
   return (
@@ -177,6 +184,23 @@ const RegisterPage = () => {
             {errors.confirmPassword && (
               <span className="error-message">{errors.confirmPassword}</span>
             )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="role">Role</label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className={errors.role ? "error" : ""}
+              disabled={isLoading}
+            >
+              <option value="USER">Student</option>
+              <option value="TECHNICIAN">Technician</option>
+              <option value="ADMIN">Admin</option>
+            </select>
+            {errors.role && <span className="error-message">{errors.role}</span>}
           </div>
 
           <button type="submit" className="register-button" disabled={isLoading}>

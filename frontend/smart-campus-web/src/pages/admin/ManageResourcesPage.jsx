@@ -194,7 +194,7 @@ export default function ManageResourcesPage() {
               className={`sidebar-nav-btn ${activeView === 'MANAGE' ? 'active' : ''}`}
               onClick={() => setActiveView('MANAGE')}
             >
-              <span className="dot" /> Manage Inventory
+              <span className="dot" /> Add Resource
             </button>
           </div>
 
@@ -220,7 +220,7 @@ export default function ManageResourcesPage() {
       <main className="admin-main-content">
         <header className="content-header">
           <div className="header-text">
-            <h1>{activeView === 'OVERVIEW' ? 'Resources Overview' : 'Manage Inventory'}</h1>
+            <h1>{activeView === 'OVERVIEW' ? 'Resources Overview' : 'Add Resource'}</h1>
             <p>{activeView === 'OVERVIEW' ? 'Real-time metrics of campus facilities.' : 'Create, update and organize resource inventory.'}</p>
           </div>
         </header>

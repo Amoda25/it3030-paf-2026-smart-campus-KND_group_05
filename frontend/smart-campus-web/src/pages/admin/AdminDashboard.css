@@ -58,13 +58,13 @@
   bottom: 0;
   background-size: cover;
   background-position: center;
-  opacity: 0.12; /* Transparency */
+  opacity: 0.22; /* Increased visibility */
   z-index: -1;
   transition: opacity 0.3s ease;
 }
 
 .stat-card:hover::before {
-  opacity: 0.2;
+  opacity: 0.35;
 }
 
 /* Specific background images for each card */

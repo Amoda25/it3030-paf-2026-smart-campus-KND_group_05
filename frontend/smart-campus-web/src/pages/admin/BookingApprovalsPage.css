@@ -112,10 +112,44 @@
   border-color: #3b82f6;
 }
 
+.booking-chart-section {
+  width: 100%;
+  max-width: 1100px;
+  margin: 30px auto 60px;
+  position: relative;
+  z-index: 5;
+  padding: 0 24px;
+}
+
+.chart-card {
+  background: white;
+  padding: 24px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(60, 100, 180, 0.1);
+  border: 1px solid #dde8f8;
+}
+
+.chart-header {
+  margin-bottom: 20px;
+}
+
+.chart-header h3 {
+  font-size: 1.1rem;
+  color: #1e3a5f;
+  margin: 0;
+  font-weight: 700;
+}
+
+.chart-header p {
+  font-size: 0.85rem;
+  color: #6b8db5;
+  margin: 4px 0 0;
+}
+
 .manage-shell {
   width: 100%;
   max-width: 1100px;
-  margin: -60px auto 0;
+  margin: 0 auto;
   position: relative;
   z-index: 2;
   padding: 0 24px 80px;

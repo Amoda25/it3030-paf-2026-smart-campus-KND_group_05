@@ -6,6 +6,15 @@ import {
   adminDeleteBooking 
 } from '../../services/bookingService';
 import { getAllResources } from '../../services/resourceService';
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer 
+} from "recharts";
 import './BookingApprovalsPage.css';
 
 const BookingApprovalsPage = () => {
@@ -19,6 +28,17 @@ const BookingApprovalsPage = () => {
     const [selectedBookingId, setSelectedBookingId] = useState(null);
     const [rejectionReason, setRejectionReason] = useState("");
     const [showRejectModal, setShowRejectModal] = useState(false);
+
+    // Sample data for the chart (In real scenario, this would be derived from 'bookings')
+    const bookingChartData = [
+        { day: "Mon", count: 4 },
+        { day: "Tue", count: 7 },
+        { day: "Wed", count: 5 },
+        { day: "Thu", count: 9 },
+        { day: "Fri", count: 12 },
+        { day: "Sat", count: 6 },
+        { day: "Sun", count: 3 },
+    ];
 
     const loadData = async () => {
         try {
@@ -204,12 +224,59 @@ const BookingApprovalsPage = () => {
                                     )}
                                     <button className="admin-delete-btn" onClick={() => handleDelete(booking.id)}>
                                         Delete Forever
-                                    </button>
+                                            </button>
                                 </div>
                             </div>
                         ))}
                     </div>
                 )}
+            </section>
+
+            <section className="booking-chart-section">
+                <div className="chart-card">
+                    <div className="chart-header">
+                        <h3>Weekly Activity Analysis</h3>
+                        <p>Number of resource bookings processed per day</p>
+                    </div>
+                    <div className="chart-container">
+                        <ResponsiveContainer width="100%" height={250}>
+                            <BarChart data={bookingChartData}>
+                                <defs>
+                                    <linearGradient id="bookingGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                                        <stop offset="95%" stopColor="#2563eb" stopOpacity={1}/>
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                                <XAxis 
+                                    dataKey="day" 
+                                    axisLine={false} 
+                                    tickLine={false} 
+                                    tick={{ fill: '#6b8db5', fontSize: 11 }} 
+                                />
+                                <YAxis 
+                                    axisLine={false} 
+                                    tickLine={false} 
+                                    tick={{ fill: '#6b8db5', fontSize: 11 }} 
+                                />
+                                <Tooltip 
+                                    cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }}
+                                    contentStyle={{ 
+                                        borderRadius: '10px', 
+                                        border: 'none', 
+                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)' 
+                                    }}
+                                />
+                                <Bar 
+                                    dataKey="count" 
+                                    fill="url(#bookingGradient)" 
+                                    radius={[4, 4, 0, 0]} 
+                                    barSize={32}
+                                />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
             </section>
 
             {/* Rejection Modal */}

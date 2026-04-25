@@ -258,12 +258,20 @@ public class BookingService {
 
     private BookingResponseDTO convertToResponseDTO(Booking booking) {
         BookingResponseDTO dto = BookingResponseDTO.fromEntity(booking);
-        userRepository.findById(booking.getUserId()).ifPresent(user -> {
+        
+        // Try finding by ID first, then by Email as fallback (for legacy data)
+        Optional<User> userOpt = userRepository.findById(booking.getUserId());
+        if (userOpt.isEmpty()) {
+            userOpt = userRepository.findByEmail(booking.getUserId());
+        }
+
+        userOpt.ifPresent(user -> {
             dto.setStudentName(user.getName());
             dto.setIdNumber(user.getIdNumber());
             dto.setDepartment(user.getDepartment());
         });
         return dto;
     }
+
 }
 

@@ -27,6 +27,8 @@ import MyBookingsPage from "../pages/user/MyBookingsPage";
 import MyTicketsPage from "../pages/user/MyTicketsPage";
 import TicketDetailsPage from "../pages/user/TicketDetailsPage";
 
+
+
 // Technician pages
 import TechnicianDashboard from "../pages/technician/TechnicianDashboard";
 import AssignedTicketsPage from "../pages/technician/AssignedTicketsPage";
@@ -69,6 +71,8 @@ export default function AppRoutes() {
         <Route path="tickets/create" element={<TicketForm />} />
         <Route path="tickets/:id" element={<TicketDetailsPage />} />
       </Route>
+
+
 
       {/* Technician */}
       <Route

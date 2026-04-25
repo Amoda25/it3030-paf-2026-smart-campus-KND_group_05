@@ -124,6 +124,10 @@ const BookingApprovalsPage = () => {
                             <p>Approved</p>
                         </div>
                         <div className="manage-stat-box">
+                            <h2>{stats.rejected}</h2>
+                            <p>Rejected</p>
+                        </div>
+                        <div className="manage-stat-box">
                             <h2>{stats.total}</h2>
                             <p>Total History</p>
                         </div>

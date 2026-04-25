@@ -454,7 +454,13 @@ const BookingApprovalsPage = () => {
 
                                         <h3 className="booking-purpose">{booking.purpose}</h3>
 
+                                        <div className="student-quick-info">
+                                            <span className="student-name">{booking.studentName || "Anonymous User"}</span>
+                                            <span className="student-id">{booking.idNumber || "N/A"}</span>
+                                        </div>
+
                                         <div className="info-row">
+
                                             <span className="info-label">Resource</span>
                                             <span className="info-value"><strong>{getResourceName(booking.resourceId)}</strong></span>
                                         </div>
@@ -546,10 +552,17 @@ const BookingApprovalsPage = () => {
                         </div>
                         
                         <div className="modal-scroll-content">
-                            <div className="detail-item">
-                                <label>Purpose</label>
-                                <p className="purpose-text">{viewBooking.purpose}</p>
+                            <div className="detail-item student-main-info">
+                                <label>Student / Requester</label>
+                                <p className="purpose-text">{viewBooking.studentName || "Anonymous User"}</p>
+                                <span className="sub-info">{viewBooking.idNumber || "No ID"} • {viewBooking.department || "No Department"}</span>
                             </div>
+
+                            <div className="detail-item">
+                                <label>Booking Purpose</label>
+                                <p>{viewBooking.purpose}</p>
+                            </div>
+
 
                             <div className="detail-grid">
                                 <div className="detail-item">

@@ -404,8 +404,29 @@
 .booking-purpose {
   font-size: 1.25rem;
   font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px;
+}
+
+.student-quick-info {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  padding: 12px;
+  background: #f1f5f9;
+  border-radius: 12px;
+}
+
+.student-name {
+  font-size: 0.95rem;
+  font-weight: 700;
   color: #1e293b;
-  margin: 0 0 16px;
+}
+
+.student-id {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .info-row {
@@ -414,6 +435,7 @@
   margin-bottom: 10px;
   font-size: 0.9rem;
 }
+
 
 .info-label {
   color: #64748b;
@@ -504,6 +526,14 @@
   margin-bottom: 24px;
 }
 
+.student-main-info .sub-info {
+  display: block;
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
 .detail-item label {
   display: block;
   font-size: 0.75rem;
@@ -513,6 +543,7 @@
   letter-spacing: 0.5px;
   margin-bottom: 6px;
 }
+
 
 .detail-item p {
   margin: 0;

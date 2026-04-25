@@ -194,7 +194,6 @@ const BookingApprovalsPage = () => {
                 <header className="content-header">
                     <div className="header-text">
                         <h1>{activeView === 'OVERVIEW' ? 'Dashboard Overview' : 'Booking Requests'}</h1>
-                        <p>{activeView === 'OVERVIEW' ? 'Performance metrics and booking trends.' : 'Manage and review campus resource allocations.'}</p>
                     </div>
                 </header>
 

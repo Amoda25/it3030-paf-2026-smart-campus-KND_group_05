@@ -29,11 +29,11 @@ public class FileStorageService {
 
     public String storeFile(MultipartFile file) {
         // Normalize file name
-        String originalFileName = file.getOriginalFilename();
-        if (originalFileName == null) {
-            originalFileName = "unnamed";
+        String original = file.getOriginalFilename();
+        if (original == null) {
+            original = "unnamed";
         }
-        originalFileName = StringUtils.cleanPath(originalFileName);
+        String originalFileName = StringUtils.cleanPath(original);
         String extension = "";
 
         int i = originalFileName.lastIndexOf('.');

@@ -113,7 +113,9 @@ public class NotificationServiceImpl implements NotificationService {
             notification.setIsRead(true);
         }
 
-        notificationRepository.saveAll(notifications);
+        @SuppressWarnings("null")
+        List<Notification> toSave = notifications;
+        notificationRepository.saveAll(toSave);
     }
 
     @Override

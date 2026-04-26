@@ -92,6 +92,7 @@ public class CommentServiceImpl implements CommentService {
         responseDTO.setMessage(comment.getMessage());
         responseDTO.setCreatedAt(comment.getCreatedAt());
 
+        @SuppressWarnings("null")
         String userId = comment.getUserId();
         if (userId != null) {
             userRepository.findById(userId).ifPresent(user -> {

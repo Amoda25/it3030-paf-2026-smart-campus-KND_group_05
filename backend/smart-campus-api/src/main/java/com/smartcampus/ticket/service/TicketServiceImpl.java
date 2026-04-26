@@ -238,7 +238,7 @@ public class TicketServiceImpl implements TicketService {
             System.err.println("Failed to send rejection notification: " + e.getMessage());
         }
     }
-    
+
 
     @Override
     public void updateResolution(@NonNull String ticketId, String resolutionNotes, String technicianId) {

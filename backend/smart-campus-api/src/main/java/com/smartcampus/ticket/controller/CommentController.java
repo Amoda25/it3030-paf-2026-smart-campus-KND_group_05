@@ -23,7 +23,6 @@ import com.smartcampus.ticket.service.CommentService;
 
 @RestController
 @RequestMapping("/api/comments")
-@CrossOrigin
 public class CommentController {
 
     private final CommentService commentService;

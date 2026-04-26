@@ -24,7 +24,7 @@ public class ProfileDTO {
     private String permanentHomeAddress;
     private String password;
 
-    public UserProfileDTO() {}
+    public ProfileDTO() {}
 
     // Getters and Setters
     public String getId() { return id; }

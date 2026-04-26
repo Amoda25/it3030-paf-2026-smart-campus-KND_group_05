@@ -11,4 +11,5 @@ public interface TicketRepository extends MongoRepository<Ticket, String> {
     List<Ticket> findByCreatedByOrderByCreatedAtDesc(String createdBy);
     List<Ticket> findByAssignedToOrderByCreatedAtDesc(String assignedTo);
     List<Ticket> findByStatusOrderByCreatedAtDesc(TicketStatus status);
+    long countByStatus(TicketStatus status);
 }

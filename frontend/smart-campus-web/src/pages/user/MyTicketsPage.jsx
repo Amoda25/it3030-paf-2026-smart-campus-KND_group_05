@@ -71,47 +71,42 @@ function MyTicketsPage() {
   };
 
   return (
-    <div className="my-tickets-container">
+    <div className="soft-page">
       {/* Hero Section */}
-      <div className="tickets-hero">
-        <div className="hero-badge">SMART CAMPUS PLATFORM</div>
-        <h1>MY TICKETS</h1>
-        <p>Track and manage all your submitted support tickets.</p>
-      </div>
-
-      <div className="dashboard-content">
-        {/* Main Dashboard Card */}
-        <div className="dashboard-main-card">
-          <div className="card-header">
-            <button className="create-btn" onClick={() => navigate("/user/tickets/create")}>
-              + Create Ticket
-            </button>
+      <section className="hero-section">
+        <div className="hero-content">
+          <div className="hero-text">
+            <h1>My Tickets</h1>
+            <p>Track and manage all your submitted support tickets in one place.</p>
           </div>
 
-          {/* Stats Cards */}
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-icon total">📊</div>
-              <div className="stat-info">
-                <span className="stat-value">{stats.total}</span>
-                <span className="stat-label">TOTAL TICKETS</span>
-              </div>
+          <div className="stats-panel">
+            <div className="stat-box">
+              <h2>{stats.total}+</h2>
+              <p>Total Tickets</p>
             </div>
-            <div className="stat-card">
-              <div className="stat-icon pending">⌛</div>
-              <div className="stat-info">
-                <span className="stat-value">{stats.pending}</span>
-                <span className="stat-label">PENDING TICKETS</span>
-              </div>
+            <div className="stat-box">
+              <h2>{stats.pending}</h2>
+              <p>Pending</p>
             </div>
-            <div className="stat-card">
-              <div className="stat-icon resolved">✅</div>
-              <div className="stat-info">
-                <span className="stat-value">{stats.resolved}</span>
-                <span className="stat-label">RESOLVED TICKETS</span>
-              </div>
+            <div className="stat-box">
+              <h2>{stats.resolved}</h2>
+              <p>Resolved</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="catalogue-shell">
+        <div className="catalogue-header">
+          <div className="header-text">
+            <h2>Support Tickets</h2>
+            <p>View and manage your technical assistance requests.</p>
+          </div>
+          <button className="create-btn" onClick={() => navigate("/user/tickets/create")}>
+            + New Ticket
+          </button>
+        </div>
 
           {/* Filter Section */}
           <div className="filter-section">
@@ -186,8 +181,7 @@ function MyTicketsPage() {
               ))}
             </div>
           )}
-        </div>
-      </div>
+      </section>
     </div>
   );
 }

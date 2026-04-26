@@ -34,5 +34,7 @@ public interface TicketService {
     void deleteTicketForTechnician(String ticketId, String technicianId);
 
     void deleteTicketForUser(String ticketId, String userId);
+    
+    java.util.Map<String, Long> getAdminStats();
 
 }

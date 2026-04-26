@@ -136,15 +136,26 @@ function TicketDetailsPage() {
               <p className="td-description-text">{ticket.description}</p>
             </div>
 
-            {/* IMAGES */}
+            {/* EVIDENCE FILES */}
             <div className="td-card">
-              <h2 className="td-card-title">UPLOADED IMAGES</h2>
+              <h2 className="td-card-title">UPLOADED EVIDENCE</h2>
               {images.length > 0 ? (
                 <div className="td-image-grid">
                   {images.map((img, idx) => (
                     <div key={idx} className="td-image-wrapper">
-                      <img src={img.imageUrl} alt={`Evidence ${idx + 1}`} />
-                      <span className="image-caption">Evidence image {idx + 1}</span>
+                      {img.fileName?.toLowerCase().endsWith('.pdf') ? (
+                        <div className="pdf-evidence-box">
+                          <div className="pdf-icon-large">PDF</div>
+                          <a href={img.imageUrl} target="_blank" rel="noopener noreferrer" className="view-pdf-link">
+                            View {img.fileName || `Document ${idx + 1}`}
+                          </a>
+                        </div>
+                      ) : (
+                        <>
+                          <img src={img.imageUrl} alt={`Evidence ${idx + 1}`} />
+                          <span className="image-caption">{img.fileName || `Evidence image ${idx + 1}`}</span>
+                        </>
+                      )}
                     </div>
                   ))}
                 </div>

@@ -408,3 +408,47 @@
   .td-main-title { font-size: 2.5rem; }
   .td-floating-status { position: static; margin-top: 24px; display: inline-flex; }
 }
+
+/* PDF Evidence Styles */
+.pdf-evidence-box {
+  background: #fdf2f2;
+  border: 2px dashed #fecaca;
+  border-radius: 1rem;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  height: 100%;
+  min-height: 200px;
+  transition: all 0.2s ease;
+}
+
+.pdf-evidence-box:hover {
+  background: #fff1f2;
+  border-color: #ef4444;
+}
+
+.pdf-icon-large {
+  background: #ef4444;
+  color: white;
+  padding: 8px 24px;
+  border-radius: 8px;
+  font-weight: 900;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+}
+
+.view-pdf-link {
+  color: #ef4444;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: center;
+  word-break: break-all;
+}
+
+.view-pdf-link:hover {
+  text-decoration: underline;
+}

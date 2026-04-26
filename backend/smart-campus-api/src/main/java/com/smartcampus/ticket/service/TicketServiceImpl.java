@@ -237,51 +237,6 @@ public class TicketServiceImpl implements TicketService {
     }
     
     @Override
-    public void updateTicketStatusAdmin(String ticketId, String status) {
-        Ticket ticket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new RuntimeException("Ticket not found"));
-
-        ticket.setStatus(TicketStatus.valueOf(status.toUpperCase()));
-        ticket.setUpdatedAt(LocalDateTime.now());
-
-        ticketRepository.save(ticket);
-
-        try {
-            notificationService.createNotification(
-                ticket.getCreatedBy(),
-                NotificationType.TICKET_STATUS_UPDATED,
-                "Admin updated your ticket status to " + ticket.getStatus(),
-                ticketId
-            );
-        } catch (Exception e) {
-            System.err.println("Failed to send notification: " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void rejectTicket(String ticketId, String reason) {
-        Ticket ticket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new RuntimeException("Ticket not found"));
-
-        ticket.setStatus(TicketStatus.REJECTED);
-        ticket.setRejectionReason(reason);
-        ticket.setUpdatedAt(LocalDateTime.now());
-
-        ticketRepository.save(ticket);
-
-        try {
-            notificationService.createNotification(
-                ticket.getCreatedBy(),
-                NotificationType.TICKET_STATUS_UPDATED,
-                "Your ticket was rejected. Reason: " + reason,
-                ticketId
-            );
-        } catch (Exception e) {
-            System.err.println("Failed to send rejection notification: " + e.getMessage());
-        }
-    }
-
-    @Override
     public void updateResolution(String ticketId, String resolutionNotes, String technicianId) {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
@@ -414,7 +369,11 @@ public class TicketServiceImpl implements TicketService {
         // Resolve creator name
         if (ticket.getCreatedBy() != null) {
             Optional<User> creatorOpt = userRepository.findById(ticket.getCreatedBy());
-            dto.setCreatedBy(creatorOpt.map(User::getName).orElse("Unknown Student"));
+            if (creatorOpt.isEmpty()) {
+                // Try finding by email if ID lookup fails (for legacy data)
+                creatorOpt = userRepository.findByEmail(ticket.getCreatedBy());
+            }
+            dto.setCreatedBy(creatorOpt.map(User::getName).orElse(ticket.getCreatedBy()));
         } else {
             dto.setCreatedBy("System");
         }
@@ -438,5 +397,15 @@ public class TicketServiceImpl implements TicketService {
         dto.setCreatedAt(ticket.getCreatedAt());
         dto.setUpdatedAt(ticket.getUpdatedAt());
         return dto;
+    }
+    @Override
+    public java.util.Map<String, Long> getAdminStats() {
+        java.util.Map<String, Long> stats = new java.util.HashMap<>();
+        stats.put("total", ticketRepository.count());
+        stats.put("open", ticketRepository.countByStatus(TicketStatus.OPEN));
+        stats.put("inProgress", ticketRepository.countByStatus(TicketStatus.IN_PROGRESS));
+        stats.put("resolved", ticketRepository.countByStatus(TicketStatus.RESOLVED));
+        stats.put("rejected", ticketRepository.countByStatus(TicketStatus.REJECTED));
+        return stats;
     }
 }

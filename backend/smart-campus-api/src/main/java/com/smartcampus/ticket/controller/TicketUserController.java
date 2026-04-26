@@ -2,8 +2,10 @@ package com.smartcampus.ticket.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,7 +44,7 @@ public class TicketUserController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<TicketResponseDTO> createTicket(
             @ModelAttribute TicketCreateDTO dto,
-            @RequestPart(value = "images", required = false) MultipartFile[] images,
+            @RequestParam(value = "images", required = false) MultipartFile[] images,
             @AuthenticationPrincipal UserDetails userDetails) {
         
         String currentUserId = extractUserId(userDetails);
@@ -89,9 +91,9 @@ public class TicketUserController {
     @GetMapping("/{id}/images")
     public ResponseEntity<List<TicketImageResponseDTO>> getTicketImages(
             @PathVariable String id,
-            @AuthenticationPrincipal UserDetails userDetails) {  // ← ADD THIS PARAMETER
+            @AuthenticationPrincipal UserDetails userDetails) {
         
-        String currentUserId = userDetails.getUsername();
+        String currentUserId = extractUserId(userDetails);
         System.out.println("User ID: " + currentUserId + " is viewing images for ticket " + id);
         
         return ResponseEntity.ok(ticketImageService.getImagesByTicketId(id, currentUserId));
@@ -100,7 +102,7 @@ public class TicketUserController {
     // TEMPORARY TEST ENDPOINT - Can be removed later
     @PostMapping(value = "/test-upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> testUpload(
-            @RequestPart(value = "images", required = false) MultipartFile[] images,
+            @RequestParam(value = "images", required = false) MultipartFile[] images,
             @AuthenticationPrincipal UserDetails userDetails) {
         
         String userId = extractUserId(userDetails);
@@ -130,15 +132,9 @@ public class TicketUserController {
 
     private String extractUserId(UserDetails userDetails) {
         if (userDetails == null) {
-            throw new RuntimeException("User not authenticated");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");
         }
-        String username = userDetails.getUsername();
-        try {
-            return username;
-        } catch (NumberFormatException e) {
-            return userRepository.findByEmail(username)
-                    .orElseThrow(() -> new RuntimeException("User not found: " + username))
-                    .getId();
-        }
+        // The username in our UserDetails is the MongoDB ID (set in JwtAuthenticationFilter)
+        return userDetails.getUsername();
     }
 }

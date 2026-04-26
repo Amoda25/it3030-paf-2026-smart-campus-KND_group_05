@@ -3,6 +3,8 @@ import { createTicket } from "../../services/ticketService";
 import "./TicketForm.css";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { getUserBookings } from "../../services/bookingService";
+import { getAllResources } from "../../services/resourceService";
 
 function TicketForm() {
   const [title, setTitle] = useState("");
@@ -10,6 +12,8 @@ function TicketForm() {
   const [priority, setPriority] = useState("");
 
   const [category, setCategory] = useState("");
+  const [resourceId, setResourceId] = useState("");
+  const [bookedResources, setBookedResources] = useState([]);
   const [location, setLocation] = useState("");
   const [contactName, setContactName] = useState("");
   const [contactDetails, setContactDetails] = useState("");
@@ -20,6 +24,27 @@ function TicketForm() {
   const navigate = useNavigate();
 
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [bookings, allResources] = await Promise.all([
+          getUserBookings(),
+          getAllResources()
+        ]);
+
+        // Get unique resource IDs from user's bookings
+        const bookedResourceIds = [...new Set(bookings.map(b => b.resourceId))];
+        
+        // Match with resource details
+        const myBookedResources = allResources.filter(r => bookedResourceIds.includes(r.id));
+        setBookedResources(myBookedResources);
+      } catch (error) {
+        console.error("Failed to fetch booked resources:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const validate = (name, value) => {
     let error = "";
@@ -37,7 +62,7 @@ function TicketForm() {
     const selectedFiles = Array.from(e.target.files);
     
     if (images.length + selectedFiles.length > 3) {
-      setErrorMessage("You can upload a maximum of 3 images.");
+      setErrorMessage("You can upload a maximum of 3 files.");
       return;
     }
 
@@ -102,6 +127,7 @@ function TicketForm() {
       formData.append("description", description);
       formData.append("priority", priority);
       formData.append("category", category);
+      formData.append("resourceId", resourceId);
       formData.append("location", location);
       formData.append("contactName", contactName);
       formData.append("contactDetails", contactDetails);
@@ -124,7 +150,8 @@ function TicketForm() {
       }, 1500);
     } catch (error) {
       console.error("Ticket creation failed:", error);
-      setErrorMessage("Failed to create ticket.");
+      const errorMsg = error.response?.data?.message || "Failed to create ticket. Please check your connection and try again.";
+      setErrorMessage(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -137,7 +164,7 @@ function TicketForm() {
           <div className="create-header">
             <div className="badge">Maintenance & Incident Ticketing</div>
             <h1>CREATE INCIDENT TICKET</h1>
-            <p>Report a campus resource or location issue with category, priority, contact details and up to 3 evidence images.</p>
+            <p>Report a campus resource or location issue with resource selection, priority, contact details and up to 3 evidence files (Images/PDF).</p>
           </div>
 
           <form onSubmit={handleSubmit} className="create-form">
@@ -159,22 +186,35 @@ function TicketForm() {
 
             <div className="form-row">
               <div className="field">
-                <label>Category *</label>
+                <label>Resource *</label>
                 <select
-                  value={category}
+                  value={resourceId}
                   onChange={(e) => {
-                    setCategory(e.target.value);
-                    validate("category", e.target.value);
+                    const selectedId = e.target.value;
+                    setResourceId(selectedId);
+                    const selectedResource = bookedResources.find(r => r.id === selectedId);
+                    if (selectedResource) {
+                      setCategory(selectedResource.name);
+                      setLocation(selectedResource.location);
+                      validate("category", selectedResource.name);
+                      validate("location", selectedResource.location);
+                    } else {
+                      setCategory(selectedId === "OTHER" ? "OTHER" : "");
+                      if (selectedId === "OTHER") {
+                        validate("category", "OTHER");
+                      }
+                    }
                   }}
                   className={errors.category ? "input-error" : ""}
                   required
                 >
-                  <option value="">Select category</option>
-                  <option value="MAINTENANCE">Maintenance</option>
-                  <option value="IT_SUPPORT">IT Support</option>
-                  <option value="ELECTRICAL">Electrical</option>
-                  <option value="PLUMBING">Plumbing</option>
-                  <option value="OTHER">Other</option>
+                  <option value="">Select resource</option>
+                  {bookedResources.map(res => (
+                    <option key={res.id} value={res.id}>
+                      {res.name} ({res.type})
+                    </option>
+                  ))}
+                  <option value="OTHER">Other / Not Listed</option>
                 </select>
                 {errors.category && <span className="field-error">{errors.category}</span>}
               </div>
@@ -266,14 +306,14 @@ function TicketForm() {
             </div>
 
             <div className="field">
-              <label>Upload Evidence Images</label>
+              <label>Upload Evidence Files</label>
               <div className="file-upload-box">
                 <div className="file-upload-content">
-                  <strong>Attach images as evidence</strong>
-                  <p>Maximum 3 images allowed. Use damaged equipment photos or error screen screenshots.</p>
+                  <strong>Attach images or PDFs as evidence</strong>
+                  <p>Maximum 3 files allowed. Use damaged equipment photos or relevant documents.</p>
                   <input
                     type="file"
-                    accept="image/*"
+                    accept="image/*,.pdf"
                     multiple
                     onChange={handleFileChange}
                     id="file-input"
@@ -284,7 +324,13 @@ function TicketForm() {
                 <div className="image-preview-grid">
                   {images.map((img, i) => (
                     <div key={i} className="preview-card">
-                      <img src={img.preview} alt={`Preview ${i}`} />
+                      {img.file.type === "application/pdf" ? (
+                        <div className="pdf-preview-icon">
+                          <span className="pdf-label">PDF</span>
+                        </div>
+                      ) : (
+                        <img src={img.preview} alt={`Preview ${i}`} />
+                      )}
                       <button 
                         type="button" 
                         className="remove-img-btn"

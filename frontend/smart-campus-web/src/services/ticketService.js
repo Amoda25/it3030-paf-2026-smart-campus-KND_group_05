@@ -29,6 +29,11 @@ export const getAllTicketsForAdmin = async () => {
   return response.data;
 };
 
+export const getAdminTicketStats = async () => {
+  const response = await api.get("/api/admin/tickets/stats");
+  return response.data;
+};
+
 export const getAdminTicketImages = async (ticketId) => {
   const response = await api.get(`/api/admin/tickets/${ticketId}/images`);
   return response.data;

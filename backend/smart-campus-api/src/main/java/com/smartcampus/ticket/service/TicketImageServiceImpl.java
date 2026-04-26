@@ -62,8 +62,8 @@ public class TicketImageServiceImpl implements TicketImageService {
 
                 String contentType = file.getContentType();
 
-                if (contentType == null || !contentType.startsWith("image/")) {
-                    throw new RuntimeException("Only image files are allowed");
+                if (contentType == null || (!contentType.startsWith("image/") && !contentType.equals("application/pdf"))) {
+                    throw new RuntimeException("Only image and PDF files are allowed");
                 }
 
                 String originalFileName = file.getOriginalFilename();

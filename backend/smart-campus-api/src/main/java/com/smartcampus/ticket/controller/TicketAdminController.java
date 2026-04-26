@@ -51,6 +51,11 @@ public class TicketAdminController {
         
         return ResponseEntity.ok(ticketService.getAllTickets());
     }
+
+    @GetMapping("/stats")
+    public ResponseEntity<java.util.Map<String, Long>> getAdminStats() {
+        return ResponseEntity.ok(ticketService.getAdminStats());
+    }
     @GetMapping("/technicians")
     public ResponseEntity<List<User>> getAllTechnicians() {
         return ResponseEntity.ok(userService.getAllTechnicians());

@@ -133,6 +133,10 @@ const TicketDetailsModal = ({ ticketId, onClose, onUpdate }) => {
                     <span className="value bold">INC-{ticket.id}</span>
                   </div>
                   <div className="modal-info-row">
+                    <span className="label">Submitted By</span>
+                    <span className="value bold">{ticket.createdBy}</span>
+                  </div>
+                  <div className="modal-info-row">
                     <span className="label">Contact Name</span>
                     <span className="value">{ticket.contactName || "N/A"}</span>
                   </div>

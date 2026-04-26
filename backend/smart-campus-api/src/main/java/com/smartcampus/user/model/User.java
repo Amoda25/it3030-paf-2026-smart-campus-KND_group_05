@@ -10,19 +10,20 @@ public class User {
 
     @Id
     private String id;
-
-
-    public User() {
-    }
-
     private String email;
     private String name;
     private String password;
     private Role role;
     private String googleId;
     private String specialization;
+    private String idNumber;
+    private String department;
     private LocalDateTime createdAt;
     private LocalDateTime lastLogin;
+
+
+    public User() {
+    }
 
 
     public void prePersist() {

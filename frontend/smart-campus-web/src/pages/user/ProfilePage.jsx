@@ -126,11 +126,11 @@ const ProfilePage = () => {
         return `${baseUrl}${path}`;
     };
 
-    if (loading) return <div className="profile-container"><div className="loading-skeleton"></div></div>;
+    if (loading) return <div className="profile-page-container"><div className="loading-skeleton"></div></div>;
 
     return (
-        <div className="profile-container">
-            <div className="profile-card">
+        <div className="profile-page-container">
+            <div className="profile-glass-card">
                 <div className="profile-header">
                     <div className="header-left">
                         <div className="avatar-wrapper">

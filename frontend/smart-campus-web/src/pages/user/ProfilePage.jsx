@@ -166,7 +166,17 @@ const ProfilePage = () => {
                                 </div>
                                 <div className="form-field">
                                     <label>Current Year and Semester</label>
-                                    <input type="text" name="currentYearSemester" value={profile.currentYearSemester || ""} onChange={handleChange} placeholder="e.g. Year 2 Sem 1" />
+                                    <select name="currentYearSemester" value={profile.currentYearSemester || ""} onChange={handleChange}>
+                                        <option value="">Select Year & Semester</option>
+                                        <option value="Year 1, Semester 1">Year 1, Semester 1</option>
+                                        <option value="Year 1, Semester 2">Year 1, Semester 2</option>
+                                        <option value="Year 2, Semester 1">Year 2, Semester 1</option>
+                                        <option value="Year 2, Semester 2">Year 2, Semester 2</option>
+                                        <option value="Year 3, Semester 1">Year 3, Semester 1</option>
+                                        <option value="Year 3, Semester 2">Year 3, Semester 2</option>
+                                        <option value="Year 4, Semester 1">Year 4, Semester 1</option>
+                                        <option value="Year 4, Semester 2">Year 4, Semester 2</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

@@ -20,10 +20,10 @@ const OAuthSuccess = () => {
       } else if (role === "TECHNICIAN") {
         navigate("/technician/tickets");
       } else {
-        navigate("/user/home");
+        navigate("/user/resources");
       }
     } else {
-      navigate("/user/home");
+      navigate("/user/resources");
     }
   }, [navigate, searchParams]);
 

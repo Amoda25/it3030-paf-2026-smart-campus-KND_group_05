@@ -211,11 +211,12 @@ export default function ManageResourcesPage() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file type
-      if (!file.type.startsWith("image/")) {
+      // Validate file type - Only allow JPG and PNG
+      const allowedTypes = ["image/jpeg", "image/png"];
+      if (!allowedTypes.includes(file.type)) {
         setFormErrors((prev) => ({
           ...prev,
-          image: "Please upload a valid image file (JPG, PNG, etc.)"
+          image: "Only JPG and PNG images are allowed."
         }));
         // Reset image in form
         setForm(prev => ({
@@ -530,7 +531,7 @@ export default function ManageResourcesPage() {
                     <input
                       type="file"
                       id="resource-image"
-                      accept="image/*"
+                      accept="image/*,application/pdf"
                       onChange={handleImageChange}
                       className={`file-input ${formErrors.image ? "input-error" : ""}`}
                     />

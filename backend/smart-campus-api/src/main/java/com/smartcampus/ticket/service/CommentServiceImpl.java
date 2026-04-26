@@ -16,7 +16,6 @@ import com.smartcampus.ticket.model.Comment;
 import com.smartcampus.ticket.model.Ticket;
 import com.smartcampus.ticket.repository.CommentRepository;
 import com.smartcampus.ticket.repository.TicketRepository;
-import com.smartcampus.user.model.User;
 import com.smartcampus.user.repository.UserRepository;
 import java.util.stream.Collectors;
 
@@ -39,7 +38,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentResponseDTO addComment(String ticketId, CommentCreateDTO dto, String currentUserId) {
+    public CommentResponseDTO addComment(@NonNull String ticketId, CommentCreateDTO dto, String currentUserId) {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
 
@@ -78,7 +77,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentResponseDTO> getCommentsByTicketId(String ticketId) {
+    public List<CommentResponseDTO> getCommentsByTicketId(@NonNull String ticketId) {
         List<Comment> comments = commentRepository.findByTicketId(ticketId);
         return comments.stream()
                 .map(this::mapToResponseDTO)
@@ -93,10 +92,14 @@ public class CommentServiceImpl implements CommentService {
         responseDTO.setMessage(comment.getMessage());
         responseDTO.setCreatedAt(comment.getCreatedAt());
 
-        userRepository.findById(comment.getUserId()).ifPresent(user -> {
-            responseDTO.setUserName(user.getName());
-            responseDTO.setUserRole(user.getRole().name());
-        });
+        @SuppressWarnings("null")
+        String userId = comment.getUserId();
+        if (userId != null) {
+            userRepository.findById(userId).ifPresent(user -> {
+                responseDTO.setUserName(user.getName());
+                responseDTO.setUserRole(user.getRole().name());
+            });
+        }
 
         return responseDTO;
     }

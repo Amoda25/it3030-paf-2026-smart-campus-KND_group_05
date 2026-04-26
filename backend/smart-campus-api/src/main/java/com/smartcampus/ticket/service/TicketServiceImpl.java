@@ -195,7 +195,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void updateTicketStatusAdmin(String ticketId, String status) {
+    public void updateTicketStatusAdmin(@NonNull String ticketId, String status) {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
 
@@ -217,52 +217,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void rejectTicket(String ticketId, String reason) {
-        Ticket ticket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new RuntimeException("Ticket not found"));
-
-        ticket.setStatus(TicketStatus.REJECTED);
-        ticket.setRejectionReason(reason);
-        ticket.setUpdatedAt(LocalDateTime.now());
-
-        ticketRepository.save(ticket);
-
-        try {
-            notificationService.createNotification(
-                ticket.getCreatedBy(),
-                NotificationType.TICKET_STATUS_UPDATED,
-                "Your ticket was rejected. Reason: " + reason,
-                ticketId
-            );
-        } catch (Exception e) {
-            System.err.println("Failed to send rejection notification: " + e.getMessage());
-        }
-    }
-    
-    @Override
-    public void updateTicketStatusAdmin(String ticketId, String status) {
-        Ticket ticket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new RuntimeException("Ticket not found"));
-
-        ticket.setStatus(TicketStatus.valueOf(status.toUpperCase()));
-        ticket.setUpdatedAt(LocalDateTime.now());
-
-        ticketRepository.save(ticket);
-
-        try {
-            notificationService.createNotification(
-                ticket.getCreatedBy(),
-                NotificationType.TICKET_STATUS_UPDATED,
-                "Admin updated your ticket status to " + ticket.getStatus(),
-                ticketId
-            );
-        } catch (Exception e) {
-            System.err.println("Failed to send notification: " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void rejectTicket(String ticketId, String reason) {
+    public void rejectTicket(@NonNull String ticketId, String reason) {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
 
@@ -313,6 +268,7 @@ public class TicketServiceImpl implements TicketService {
 
 
     @Override
+    @SuppressWarnings("null")
     public void deleteTicket(@NonNull String ticketId) {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
@@ -341,6 +297,7 @@ public class TicketServiceImpl implements TicketService {
 
 
     @Override
+    @SuppressWarnings("null")
     public void deleteTicketForTechnician(@NonNull String ticketId, String technicianId) {
 
         Ticket ticket = ticketRepository.findById(ticketId)
@@ -377,6 +334,7 @@ public class TicketServiceImpl implements TicketService {
 
 
     @Override
+    @SuppressWarnings("null")
     public void deleteTicketForUser(@NonNull String ticketId, String userId) {
 
         Ticket ticket = ticketRepository.findById(ticketId)
@@ -406,6 +364,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
 
+    @SuppressWarnings("null")
     private TicketResponseDTO mapToResponseDTO(Ticket ticket) {
         TicketResponseDTO dto = new TicketResponseDTO();
         dto.setId(ticket.getId());

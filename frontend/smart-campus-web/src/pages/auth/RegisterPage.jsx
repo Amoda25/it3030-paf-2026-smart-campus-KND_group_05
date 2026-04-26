@@ -43,8 +43,8 @@ const RegisterPage = () => {
     if (!formData.password) {
       newErrors.password = "Password is required";
       isValid = false;
-    } else if (formData.password.length < 16 || formData.password.length > 20) {
-      newErrors.password = "Password must be between 16 and 20 characters";
+    } else if (formData.password.length < 8 || formData.password.length > 12) {
+      newErrors.password = "Password must be between 8 and 12 characters";
       isValid = false;
     } else if (!/(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(formData.password)) {
       newErrors.password = "Password must include letters, numbers, and symbols";
@@ -203,7 +203,7 @@ const RegisterPage = () => {
                 )}
               </button>
             </div>
-            <p className="password-hint">16-20 chars, letters, numbers & symbols</p>
+            <p className="password-hint">8-12 chars, letters, numbers & symbols</p>
             {errors.password && <span className="error-message">{errors.password}</span>}
           </div>
 

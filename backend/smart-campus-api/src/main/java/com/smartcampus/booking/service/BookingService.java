@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import com.smartcampus.booking.dto.BookingCreateDTO;
 import com.smartcampus.booking.dto.BookingResponseDTO;
@@ -157,7 +159,7 @@ public class BookingService {
     /**
      * Get all active bookings for a specific resource on a given day
      */
-    public List<BookingResponseDTO> getResourceBookingsForDay(String resourceId, java.time.LocalDate date) {
+    public List<BookingResponseDTO> getResourceBookingsForDay(String resourceId, LocalDate date) {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.plusDays(1).atStartOfDay();
         

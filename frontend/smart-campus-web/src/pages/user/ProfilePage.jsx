@@ -82,8 +82,13 @@ const ProfilePage = () => {
                     setSaving(false);
                     return;
                 }
-                if (profile.newPassword.length < 6) {
-                    setMessage({ type: "error", text: "Password must be at least 6 characters long!" });
+                if (profile.newPassword.length < 8 || profile.newPassword.length > 12) {
+                    setMessage({ type: "error", text: "Password must be between 8 and 12 characters!" });
+                    setSaving(false);
+                    return;
+                }
+                if (!/(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(profile.newPassword)) {
+                    setMessage({ type: "error", text: "Password must include letters, numbers, and symbols!" });
                     setSaving(false);
                     return;
                 }

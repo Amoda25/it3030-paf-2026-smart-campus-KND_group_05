@@ -3,7 +3,7 @@ package com.smartcampus.user.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.smartcampus.user.dto.UserProfileDTO;
+import com.smartcampus.user.dto.ProfileDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,14 +63,14 @@ public class UserService {
 
     // Unified Profile Methods
     @Transactional(readOnly = true)
-    public UserProfileDTO getProfileByEmail(String email) {
+    public ProfileDTO getProfileByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return mapToDTO(user);
     }
 
     @Transactional
-    public UserProfileDTO updateProfileByEmail(String email, UserProfileDTO dto) {
+    public ProfileDTO updateProfileByEmail(String email, ProfileDTO dto) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -102,8 +102,8 @@ public class UserService {
         userRepository.deleteById(user.getId());
     }
 
-    private UserProfileDTO mapToDTO(User user) {
-        UserProfileDTO dto = new UserProfileDTO();
+    private ProfileDTO mapToDTO(User user) {
+        ProfileDTO dto = new ProfileDTO();
         dto.setId(user.getId());
         dto.setEmail(user.getEmail());
         dto.setName(user.getName());

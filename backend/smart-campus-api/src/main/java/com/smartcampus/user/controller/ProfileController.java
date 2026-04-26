@@ -1,6 +1,6 @@
 package com.smartcampus.user.controller;
 
-import com.smartcampus.user.dto.UserProfileDTO;
+import com.smartcampus.user.dto.ProfileDTO;
 import com.smartcampus.user.service.UserService;
 import com.smartcampus.common.service.FileStorageService;
 import org.springframework.http.ResponseEntity;
@@ -9,18 +9,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/user/profile")
-public class UserProfileController {
+public class ProfileController {
 
     private final UserService userService;
     private final FileStorageService fileStorageService;
 
-    public UserProfileController(UserService userService, FileStorageService fileStorageService) {
+    public ProfileController(UserService userService, FileStorageService fileStorageService) {
         this.userService = userService;
         this.fileStorageService = fileStorageService;
     }
 
     @GetMapping
-    public ResponseEntity<UserProfileDTO> getProfile(org.springframework.security.core.Authentication authentication) {
+    public ResponseEntity<ProfileDTO> getProfile(org.springframework.security.core.Authentication authentication) {
         if (authentication == null) {
             return ResponseEntity.status(401).build();
         }
@@ -28,7 +28,7 @@ public class UserProfileController {
     }
 
     @PutMapping
-    public ResponseEntity<UserProfileDTO> updateProfile(org.springframework.security.core.Authentication authentication, @RequestBody UserProfileDTO dto) {
+    public ResponseEntity<ProfileDTO> updateProfile(org.springframework.security.core.Authentication authentication, @RequestBody ProfileDTO dto) {
         if (authentication == null) {
             return ResponseEntity.status(401).build();
         }

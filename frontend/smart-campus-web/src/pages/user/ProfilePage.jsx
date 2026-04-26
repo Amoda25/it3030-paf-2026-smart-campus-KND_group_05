@@ -192,7 +192,7 @@ const ProfilePage = () => {
                                             <label>Module Name</label>
                                             <input type="text" name="moduleName" value={profile.moduleName || ""} onChange={handleChange} placeholder="e.g. Software Engineering" />
                                         </div>
-                                        <div className="form-field">
+                                        <div className="form-field full-width">
                                             <label>Module ID</label>
                                             <input type="text" name="moduleId" value={profile.moduleId || ""} onChange={handleChange} placeholder="e.g. IT2020" />
                                         </div>

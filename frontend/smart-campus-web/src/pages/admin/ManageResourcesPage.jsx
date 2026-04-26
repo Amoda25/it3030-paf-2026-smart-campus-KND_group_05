@@ -82,12 +82,20 @@ export default function ManageResourcesPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
     setForm({
       ...form,
       [name]: value,
     });
-    // Clear error for this field when user starts typing
-    if (formErrors[name]) {
+
+    // Immediate validation for negative capacity
+    if (name === "capacity" && value !== "" && Number(value) < 0) {
+      setFormErrors((prev) => ({
+        ...prev,
+        capacity: "Capacity cannot be a negative value"
+      }));
+    } else if (formErrors[name]) {
+      // Clear error for this field when user corrects it or starts typing other fields
       setFormErrors((prev) => {
         const newErrors = { ...prev };
         delete newErrors[name];
@@ -487,6 +495,7 @@ export default function ManageResourcesPage() {
                       name="capacity"
                       placeholder="e.g. 50"
                       type="number"
+                      min="1"
                       value={form.capacity}
                       onChange={handleChange}
                       className={formErrors.capacity ? "input-error" : ""}

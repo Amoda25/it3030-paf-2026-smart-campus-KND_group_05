@@ -60,21 +60,30 @@ const ProfilePage = () => {
         setMessage({ type: "", text: "" });
 
         try {
+            console.log("DEBUG: Starting profile update. Profile:", profile);
             let currentProfile = { ...profile };
 
             // Upload image if selected
             if (selectedFile) {
+                console.log("DEBUG: Selected file detected. Uploading...", selectedFile.name);
                 const uploadedUrl = await uploadProfilePicture(selectedFile);
+                console.log("DEBUG: Upload success. URL:", uploadedUrl);
                 currentProfile.profilePictureUrl = uploadedUrl;
             }
 
+            console.log("DEBUG: Updating user profile record...");
             const updatedData = await updateUserProfile(currentProfile);
+            console.log("DEBUG: Profile record updated successfully.");
             setProfile(updatedData);
             setSelectedFile(null); // Clear selected file after success
             setMessage({ type: "success", text: "Profile updated successfully!" });
             setTimeout(() => setMessage({ type: "", text: "" }), 5000);
         } catch (err) {
-            console.error("Profile update error:", err);
+            console.error("DEBUG: Profile update error caught:", err);
+            if (err.response) {
+                console.error("DEBUG: Error response status:", err.response.status);
+                console.error("DEBUG: Error response data:", err.response.data);
+            }
             setMessage({ type: "error", text: "Failed to save profile changes." });
         } finally {
             setSaving(false);

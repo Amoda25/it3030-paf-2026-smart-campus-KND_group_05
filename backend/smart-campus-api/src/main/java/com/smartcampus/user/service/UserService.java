@@ -100,7 +100,11 @@ public class UserService {
     public void deleteAccountByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        userRepository.deleteById(user.getId());
+        String userId = user.getId();
+        if (userId != null) {
+            userRepository.deleteById(userId);
+        }
+
     }
 
     private ProfileDTO mapToDTO(User user) {

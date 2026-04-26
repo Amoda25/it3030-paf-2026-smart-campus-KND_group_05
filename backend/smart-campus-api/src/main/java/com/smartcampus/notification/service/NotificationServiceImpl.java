@@ -113,8 +113,8 @@ public class NotificationServiceImpl implements NotificationService {
             notification.setIsRead(true);
         }
 
-        @SuppressWarnings("null")
         List<Notification> toSave = notifications;
+
         notificationRepository.saveAll(toSave);
     }
 

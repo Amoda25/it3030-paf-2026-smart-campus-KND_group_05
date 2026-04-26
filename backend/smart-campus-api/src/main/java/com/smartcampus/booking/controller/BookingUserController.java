@@ -3,8 +3,9 @@ package com.smartcampus.booking.controller;
 import com.smartcampus.booking.dto.*;
 import com.smartcampus.booking.service.BookingService;
 
-import com.smartcampus.user.repository.UserRepository;
+
 import jakarta.annotation.PostConstruct;
+
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

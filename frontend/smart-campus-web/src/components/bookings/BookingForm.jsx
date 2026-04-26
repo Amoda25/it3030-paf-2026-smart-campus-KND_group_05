@@ -33,15 +33,18 @@ const BookingForm = ({ onClose, onSuccess, resources = [] }) => {
 
   useEffect(() => {
     if (formData.resourceId && formData.startDate) {
+      console.log("DEBUG: Fetching availability for:", formData.resourceId, formData.startDate);
       fetchAvailability();
     }
   }, [formData.resourceId, formData.startDate]);
 
   const fetchAvailability = async () => {
     setIsFetchingAvailability(true);
+    setOccupiedSlots([]); // Clear old data while loading
     try {
       const bookings = await getAvailability(formData.resourceId, formData.startDate);
-      setOccupiedSlots(bookings);
+      console.log("DEBUG: Received occupied slots:", bookings);
+      setOccupiedSlots(bookings || []);
     } catch (err) {
       console.error("Error fetching availability:", err);
     } finally {
@@ -54,6 +57,12 @@ const BookingForm = ({ onClose, onSuccess, resources = [] }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
     if (error) setError("");
     if (successMessage) setSuccessMessage("");
+  };
+
+  const selectSlot = (slotValue) => {
+    if (isSlotOccupied(slotValue)) return;
+    setFormData(prev => ({ ...prev, timeSlot: slotValue }));
+    if (error) setError("");
   };
 
   const today = new Date().toISOString().split('T')[0];
@@ -104,34 +113,41 @@ const BookingForm = ({ onClose, onSuccess, resources = [] }) => {
       const backendMessage = err.response?.data;
       const msg = typeof backendMessage === 'string' && backendMessage.length > 0
         ? backendMessage
-        : err.response?.data?.message || "This slot might already be taken. Please try another one.";
+        : err.response?.data?.message || "Conflict: This slot is taken.";
       setError(msg);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const parseBackendDate = (dateVal) => {
+    if (!dateVal) return null;
+    // If it's an array [YYYY, MM, DD, HH, mm]
+    if (Array.isArray(dateVal)) {
+      // Month is 0-indexed in JS Date
+      return new Date(dateVal[0], dateVal[1] - 1, dateVal[2], dateVal[3], dateVal[4]);
+    }
+    // Otherwise assume it's a string
+    return new Date(dateVal);
+  };
+
   const isSlotOccupied = (slotValue) => {
     if (!formData.startDate || occupiedSlots.length === 0) return false;
 
     const [slotStart, slotEnd] = slotValue.split('-');
-    
-    // Create Date objects for the slot start/end in local time
     const slotStartTime = new Date(`${formData.startDate}T${slotStart}:00`).getTime();
     const slotEndTime = new Date(`${formData.startDate}T${slotEnd}:00`).getTime();
 
     if (isNaN(slotStartTime) || isNaN(slotEndTime)) return false;
 
     return occupiedSlots.some(b => {
-      // Ensure we parse the backend dates correctly
-      const bStart = new Date(b.startTime).getTime();
-      const bEnd = new Date(b.endTime).getTime();
+      const bStart = parseBackendDate(b.startTime)?.getTime();
+      const bEnd = parseBackendDate(b.endTime)?.getTime();
       
-      if (isNaN(bStart) || isNaN(bEnd)) return false;
+      if (!bStart || !bEnd) return false;
 
       // Overlap logic: (SlotStart < BookingEnd) AND (SlotEnd > BookingStart)
-      const hasOverlap = (slotStartTime < bEnd) && (slotEndTime > bStart);
-      return hasOverlap;
+      return (slotStartTime < bEnd) && (slotEndTime > bStart);
     });
   };
 
@@ -164,17 +180,24 @@ const BookingForm = ({ onClose, onSuccess, resources = [] }) => {
 
           <div className="form-group">
             <label>Select Time Slot (1 Hour)</label>
-            <select name="timeSlot" value={formData.timeSlot} onChange={handleChange} required disabled={isLoading || !formData.startDate}>
-              <option value="">Choose a time...</option>
+            <div className="time-grid">
               {timeSlots.map((slot, idx) => {
                 const occupied = formData.startDate && isSlotOccupied(slot.value);
+                const isSelected = formData.timeSlot === slot.value;
                 return (
-                  <option key={idx} value={slot.value} disabled={occupied}>
-                    {slot.label} {occupied ? "(Occupied)" : ""}
-                  </option>
+                  <button
+                    key={idx}
+                    type="button"
+                    className={`time-slot-btn ${occupied ? 'occupied' : ''} ${isSelected ? 'selected' : ''}`}
+                    onClick={() => selectSlot(slot.value)}
+                    disabled={occupied || !formData.startDate}
+                  >
+                    {slot.label}
+                    {occupied && <span className="occupied-label">Occupied</span>}
+                  </button>
                 );
               })}
-            </select>
+            </div>
             {isFetchingAvailability && <p className="loading-text">Checking availability...</p>}
           </div>
 
@@ -190,7 +213,7 @@ const BookingForm = ({ onClose, onSuccess, resources = [] }) => {
 
           <div className="form-actions">
             <button type="button" className="cancel-btn" onClick={onClose} disabled={isLoading}>Cancel</button>
-            <button type="submit" className="submit-btn" disabled={isLoading}>
+            <button type="submit" className="submit-btn" disabled={isLoading || !formData.timeSlot}>
               {isLoading ? "Processing..." : "Confirm Booking"}
             </button>
           </div>

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { createBooking } from '../../services/bookingService';
+import React, { useState, useEffect } from 'react';
+import { createBooking, getAvailability } from '../../services/bookingService';
 import './BookingForm.css';
 
 const BookingForm = ({ onClose, onSuccess, resources = [] }) => {
@@ -16,6 +16,26 @@ const BookingForm = ({ onClose, onSuccess, resources = [] }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [occupiedSlots, setOccupiedSlots] = useState([]);
+  const [isFetchingAvailability, setIsFetchingAvailability] = useState(false);
+
+  useEffect(() => {
+    if (formData.resourceId && formData.startDate) {
+      fetchAvailability();
+    }
+  }, [formData.resourceId, formData.startDate]);
+
+  const fetchAvailability = async () => {
+    setIsFetchingAvailability(true);
+    try {
+      const bookings = await getAvailability(formData.resourceId, formData.startDate);
+      setOccupiedSlots(bookings);
+    } catch (err) {
+      console.error("Error fetching availability:", err);
+    } finally {
+      setIsFetchingAvailability(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -113,6 +133,26 @@ const BookingForm = ({ onClose, onSuccess, resources = [] }) => {
               <input type="time" name="startTime" value={formData.startTime} onChange={handleChange} required disabled={isLoading} />
             </div>
           </div>
+
+          {/* Availability Display */}
+          {formData.resourceId && formData.startDate && (
+            <div className="availability-info">
+              <h4>Occupied Slots for this day:</h4>
+              {isFetchingAvailability ? (
+                <p className="loading-text">Checking availability...</p>
+              ) : occupiedSlots.length > 0 ? (
+                <div className="occupied-list">
+                  {occupiedSlots.map((b, idx) => (
+                    <span key={idx} className="occupied-tag">
+                      {new Date(b.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(b.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <p className="available-text">✅ All slots available</p>
+              )}
+            </div>
+          )}
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
             <div className="form-group">

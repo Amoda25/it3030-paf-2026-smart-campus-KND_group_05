@@ -67,7 +67,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/user/profile").authenticated()
                 
                 // Generic rules
-                .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN", "LECTURER")
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/technician/**").hasRole("TECHNICIAN")
                 

@@ -1,251 +1,113 @@
-import React, { useEffect, useState } from "react";
-import {
-  getAllTicketsForAdmin,
-  getAdminTicketImages,
-  updateAdminTicketStatus,
-  updateAdminResolution,
-  getTicketComments,
-  addTicketComment
-} from "../../services/ticketService";
-import "./TicketDetailsModal.css";
+
+import React, { useState, useEffect } from 'react';
+import { getAdminTicketImages, getAllTicketsForAdmin } from '../../services/ticketService';
+import './TicketDetailsModal.css';
 
 const TicketDetailsModal = ({ ticketId, onClose, onUpdate }) => {
-  const [ticket, setTicket] = useState(null);
-  const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [resolutionNote, setResolutionNote] = useState("");
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
+    const [ticket, setTicket] = useState(null);
+    const [images, setImages] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-  const fetchComments = async () => {
-    try {
-      const data = await getTicketComments(ticketId);
-      setComments(data);
-    } catch (error) {
-      console.error("Failed to fetch comments", error);
-    }
-  };
+    useEffect(() => {
+        const fetchDetails = async () => {
+            try {
+                setLoading(true);
+                const allTickets = await getAllTicketsForAdmin();
+                const found = allTickets.find(t => String(t.id) === String(ticketId));
+                setTicket(found);
 
-  const fetchTicketDetails = async (silent = false) => {
-    try {
-      if (!silent) setLoading(true);
-      const tickets = await getAllTicketsForAdmin();
-      const selectedTicket = tickets.find((t) => String(t.id) === String(ticketId));
+                const imageList = await getAdminTicketImages(ticketId);
+                setImages(imageList);
+            } catch (error) {
+                console.error("Failed to fetch ticket details:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchDetails();
+    }, [ticketId]);
 
-      if (selectedTicket) {
-        setTicket(selectedTicket);
-        setResolutionNote(selectedTicket.resolutionNotes || "");
-        const imageData = await getAdminTicketImages(ticketId);
-        setImages(imageData);
-      }
-    } catch (error) {
-      console.error("Failed to load details", error);
-    } finally {
-      if (!silent) setLoading(false);
-    }
-  };
+    if (loading) return null;
+    if (!ticket) return null;
 
-  useEffect(() => {
-    if (ticketId) {
-      fetchTicketDetails();
-      fetchComments();
-    }
-  }, [ticketId]);
-
-  const handleStatusUpdate = async (newStatus) => {
-    try {
-      await updateAdminTicketStatus(ticketId, newStatus);
-      
-      // Optimistically update local state for instant feedback
-      setTicket(prev => prev ? { ...prev, status: newStatus } : prev);
-      
-      // Refetch full details silently to ensure consistency
-      fetchTicketDetails(true);
-      
-      if (onUpdate) onUpdate();
-    } catch (error) {
-      console.error("Status update error:", error);
-      const msg = error.response?.data || error.message || "Unknown error";
-      alert("Failed to update status: " + msg);
-    }
-  };
-
-  const handleSaveResolution = async () => {
-    try {
-      await updateAdminResolution(ticketId, resolutionNote);
-      alert("Resolution note saved successfully!");
-    } catch (error) {
-      alert("Failed to save resolution note");
-    }
-  };
-
-  const handleAddComment = async () => {
-    if (!newComment.trim()) return;
-    try {
-      await addTicketComment(ticketId, newComment);
-      setNewComment("");
-      fetchComments();
-    } catch (error) {
-      console.error("Failed to add comment", error);
-      const msg = error.response?.data?.message || error.response?.data || error.message;
-      alert("Failed to add comment: " + msg);
-    }
-  };
-
-  if (!ticketId) return null;
-
-  return (
-    <div className="ticket-modal-overlay" onClick={onClose}>
-      <div className="ticket-modal-container animate-slide-up" onClick={(e) => e.stopPropagation()}>
-        
-        {loading ? (
-          <div className="modal-loading">Loading ticket details...</div>
-        ) : !ticket ? (
-          <div className="modal-error">Ticket not found.</div>
-        ) : (
-          <>
-            {/* Header */}
-            <header className="modal-header">
-              <div className="header-left">
-                <span className="modal-tag">TICKET DETAILS</span>
-                <h1 className="modal-title">{ticket.title}</h1>
-                <p className="modal-subtitle">INC-{ticket.id} • {ticket.location || "N/A"}</p>
-              </div>
-              <button className="modal-close-btn" onClick={onClose}>Close</button>
-            </header>
-
-            <div className="modal-meta-bar">
-              <div className="modal-badges">
-                <span className={`prio-badge-big ${ticket.priority.toLowerCase()}`}>{ticket.priority}</span>
-                <span className={`status-pill-big ${ticket.status.toLowerCase()}`}>{ticket.status.replace('_', ' ')}</span>
-              </div>
-              <div className="modal-id-tag">Ticket ID: INC-{ticket.id}</div>
-            </div>
-
-            {/* Scrollable Content */}
-            <div className="modal-body-scroll">
-              
-              <section className="modal-section">
-                <h3>Ticket Information</h3>
-                <div className="modal-info-card">
-                  <div className="modal-info-row">
-                    <span className="label">Ticket ID</span>
-                    <span className="value bold">INC-{ticket.id}</span>
-                  </div>
-                  <div className="modal-info-row">
-                    <span className="label">Contact Name</span>
-                    <span className="value">{ticket.contactName || "N/A"}</span>
-                  </div>
-                  <div className="modal-info-row">
-                    <span className="label">Contact Details</span>
-                    <span className="value">{ticket.contactDetails || "N/A"}</span>
-                  </div>
-                  <div className="modal-info-row">
-                    <span className="label">Category</span>
-                    <span className="value">{ticket.category || "General Issue"}</span>
-                  </div>
-                  <div className="modal-info-row">
-                    <span className="label">Location</span>
-                    <span className="value">{ticket.location || "N/A"}</span>
-                  </div>
-                  <div className="modal-info-row">
-                    <span className="label">Submitted On</span>
-                    <span className="value">{ticket.createdAt ? new Date(ticket.createdAt).toLocaleString() : "N/A"}</span>
-                  </div>
-                  <div className="modal-info-row">
-                    <span className="label">Assigned Technician</span>
-                    <span className="value bold">{ticket.assignedTo || "Not Assigned"}</span>
-                  </div>
-                </div>
-              </section>
-
-              <section className="modal-section">
-                <h3>Issue Description</h3>
-                <div className="modal-text-card">
-                  <p>{ticket.description}</p>
-                </div>
-              </section>
-
-              <section className="modal-section">
-                <h3>Attached Images</h3>
-                <div className="modal-images-card">
-                  {images.length > 0 ? (
-                    <div className="modal-image-strip">
-                      {images.map((img, idx) => (
-                        <img key={idx} src={img.imageUrl} alt="Attached" className="modal-img" />
-                      ))}
+    return (
+        <div className="ticket-modal-overlay">
+            <div className="ticket-modal-content animate-fade-in">
+                <div className="modal-header">
+                    <div className="header-info">
+                        <h2>{ticket.title}</h2>
+                        <span className="ticket-id">INC-{ticket.id.slice(-4).toUpperCase()}</span>
                     </div>
-                  ) : (
-                    <p className="muted">No images attached.</p>
-                  )}
+                    <button className="close-btn" onClick={onClose}>&times;</button>
                 </div>
-              </section>
 
-              <section className="modal-section">
-                <h3>Workflow Actions</h3>
-                <div className="modal-actions-card">
-                  <button className="btn-prog" onClick={() => handleStatusUpdate("IN_PROGRESS")}>Mark In Progress</button>
-                  <button className="btn-res" onClick={() => handleStatusUpdate("RESOLVED")}>Mark Resolved</button>
-                  <button className="btn-close-wf" onClick={() => handleStatusUpdate("CLOSED")}>Close Ticket</button>
-                </div>
-              </section>
-
-              <section className="modal-section">
-                <h3>Resolution Note</h3>
-                <div className="modal-res-card">
-                  <textarea 
-                    placeholder="Add technician resolution note" 
-                    value={resolutionNote}
-                    onChange={(e) => setResolutionNote(e.target.value)}
-                  />
-                  <button className="btn-save" onClick={handleSaveResolution}>Save Resolution Note</button>
-                </div>
-              </section>
-
-              <section className="modal-section">
-                <h3>Comments & Updates</h3>
-                <div className="modal-comments-card">
-                  <div className="comments-thread">
-                    {comments.length > 0 ? (
-                      comments.map((comment) => (
-                        <div key={comment.id} className={`comment-bubble ${comment.userRole?.toLowerCase() || 'student'}`}>
-                          <div className="comment-header">
-                            <span className="comment-user">{comment.userName || "User"}</span>
-                            <span className={`comment-role-badge ${comment.userRole?.toLowerCase() || 'student'}`}>
-                              {comment.userRole || 'STUDENT'}
+                <div className="modal-body">
+                    <div className="info-section">
+                        <div className="info-group">
+                            <label>Status</label>
+                            <span className={`status-badge ${ticket.status.toLowerCase()}`}>
+                                {ticket.status.replace('_', ' ')}
                             </span>
-                            <span className="comment-time">
-                              {comment.createdAt ? new Date(comment.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ""}
-                            </span>
-                          </div>
-                          <p className="comment-content">{comment.message}</p>
                         </div>
-                      ))
-                    ) : (
-                      <div className="no-comments">No comments yet. Start the conversation!</div>
-                    )}
-                  </div>
-                  <div className="comment-input-area">
-                    <input 
-                      type="text" 
-                      placeholder="Type your message..." 
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && handleAddComment()}
-                    />
-                    <button className="send-btn" onClick={handleAddComment}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                    </button>
-                  </div>
-                </div>
-              </section>
+                        <div className="info-group">
+                            <label>Priority</label>
+                            <span className={`priority-badge ${ticket.priority.toLowerCase()}`}>
+                                {ticket.priority}
+                            </span>
+                        </div>
+                        <div className="info-group">
+                            <label>Category</label>
+                            <span>{ticket.category || "General"}</span>
+                        </div>
+                        <div className="info-group">
+                            <label>Location</label>
+                            <span>{ticket.location || "N/A"}</span>
+                        </div>
+                    </div>
 
+                    <div className="description-section">
+                        <label>Description</label>
+                        <p>{ticket.description}</p>
+                    </div>
+
+                    <div className="user-section">
+                        <div className="info-group">
+                            <label>Reported By</label>
+                            <span>{ticket.createdBy}</span>
+                        </div>
+                        <div className="info-group">
+                            <label>Assigned To</label>
+                            <span className={ticket.assignedTo ? "bold" : "muted"}>
+                                {ticket.assignedTo || "Not Assigned"}
+                            </span>
+                        </div>
+                    </div>
+
+                    {images.length > 0 && (
+                        <div className="images-section">
+                            <label>Evidence Images</label>
+                            <div className="image-grid">
+                                {images.map((img, idx) => (
+                                    <img key={idx} src={img.imageUrl} alt="evidence" />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                    
+                    {ticket.rejectionReason && (
+                        <div className="rejection-section">
+                            <label>Rejection Reason</label>
+                            <p className="rejection-text">{ticket.rejectionReason}</p>
+                        </div>
+                    )}
+                </div>
+
+                <div className="modal-footer">
+                    <button className="btn-secondary" onClick={onClose}>Close Details</button>
+                </div>
             </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default TicketDetailsModal;

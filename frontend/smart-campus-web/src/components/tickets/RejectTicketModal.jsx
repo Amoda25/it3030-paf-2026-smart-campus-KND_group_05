@@ -1,69 +1,67 @@
+
 import React, { useState } from 'react';
-import { rejectAdminTicket } from '../../services/ticketService';
+import api from '../../services/api';
 import './RejectTicketModal.css';
 
 const RejectTicketModal = ({ ticket, onClose, onRejectSuccess }) => {
-    const [reason, setReason] = useState("");
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [error, setError] = useState("");
+    const [reason, setReason] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleReject = async () => {
         if (!reason.trim()) {
-            setError("Please provide a reason for rejection.");
+            setError("Please provide a reason for rejection");
             return;
         }
 
         try {
-            setIsSubmitting(true);
-            setError("");
-            await rejectAdminTicket(ticket.id, reason);
+            setLoading(true);
+            // Using the endpoint established in previous steps
+            await api.put(`/api/admin/tickets/${ticket.id}/reject`, { reason });
             onRejectSuccess();
             onClose();
         } catch (err) {
-            console.error("Failed to reject ticket", err);
-            setError(err.response?.data || "Failed to reject ticket. Please try again.");
+            setError("Failed to reject ticket. Please try again.");
         } finally {
-            setIsSubmitting(false);
+            setLoading(false);
         }
     };
 
     return (
-        <div className="reject-modal-overlay" onClick={onClose}>
-            <div className="reject-modal-content" onClick={(e) => e.stopPropagation()}>
-                <div className="reject-modal-header">
-                    <h3>Reject Ticket</h3>
+        <div className="modal-overlay">
+            <div className="modal-content animate-fade-in">
+                <div className="reject-header">
+                    <h3>Reject Support Ticket</h3>
                     <button className="close-btn" onClick={onClose}>&times;</button>
                 </div>
-                <form onSubmit={handleSubmit}>
-                    <div className="reject-modal-body">
-                        <div className="ticket-info-mini">
-                            <p><strong>Ticket:</strong> {ticket.title}</p>
-                            <p><strong>ID:</strong> INC-{ticket.id.slice(-4).toUpperCase()}</p>
-                            <p><strong>Student:</strong> {ticket.createdBy}</p>
-                        </div>
 
-                        <div className="form-group">
-                            <label htmlFor="reason">Reason for Rejection</label>
-                            <textarea
-                                id="reason"
-                                placeholder="Explain why this ticket is being rejected..."
-                                value={reason}
-                                onChange={(e) => setReason(e.target.value)}
-                                required
-                            />
-                            {error && <p className="error-text" style={{color: '#ef4444', fontSize: '0.85rem', marginTop: '4px'}}>{error}</p>}
-                        </div>
+                <div className="modal-body">
+                    <div className="ticket-summary-box">
+                        <span className="label">Ticket</span>
+                        <span className="value">{ticket.title}</span>
                     </div>
-                    <div className="reject-modal-footer">
-                        <button type="button" className="btn-cancel" onClick={onClose} disabled={isSubmitting}>
-                            Cancel
-                        </button>
-                        <button type="submit" className="btn-confirm-reject" disabled={isSubmitting}>
-                            {isSubmitting ? "Rejecting..." : "Confirm Rejection"}
-                        </button>
+
+                    <div className="input-group">
+                        <label>Reason for Rejection *</label>
+                        <textarea 
+                            value={reason} 
+                            onChange={(e) => setReason(e.target.value)}
+                            placeholder="Explain why this ticket is being rejected..."
+                            rows="4"
+                            disabled={loading}
+                        />
+                        <p className="help-text">This reason will be visible to the student.</p>
                     </div>
-                </form>
+
+                    {error && <p className="error-msg">{error}</p>}
+                </div>
+
+                <div className="modal-footer">
+                    <button className="btn-back" onClick={onClose} disabled={loading}>Go Back</button>
+                    <button className="btn-reject-confirm" onClick={handleReject} disabled={loading}>
+                        {loading ? "Processing..." : "Reject Ticket"}
+                    </button>
+                </div>
             </div>
         </div>
     );

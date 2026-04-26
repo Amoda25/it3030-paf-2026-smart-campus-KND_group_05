@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -258,61 +259,64 @@ const AdminTicketsPage = () => {
                         ) : filteredTickets.length === 0 ? (
                             <div className="manage-message">No tickets found matching "{filterStatus}" status.</div>
                         ) : (
-                            <div className="tickets-table-container">
-                                <table className="tickets-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Ticket ID</th>
-                                            <th>Title</th>
-                                            <th>Location</th>
-                                            <th>Priority</th>
-                                            <th>Status</th>
-                                            <th>Technician</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {filteredTickets.map(ticket => (
-                                            <tr key={ticket.id}>
-                                                <td className="bold mono">INC-{ticket.id.slice(-4).toUpperCase()}</td>
-                                                <td>
-                                                    <div className="title-cell">
-                                                        <span className="main-title">{ticket.title}</span>
-                                                        <span className="sub-title">{ticket.category || "General"} ● {ticket.createdBy}</span>
-                                                    </div>
-                                                </td>
-                                                <td>{ticket.location || "N/A"}</td>
-                                                <td>
-                                                    <span className={`prio-badge ${ticket.priority.toLowerCase()}`}>
-                                                        {ticket.priority}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <span className={`status-pill ${ticket.status.toLowerCase()}`}>
-                                                        {ticket.status.replace('_', ' ')}
-                                                    </span>
-                                                </td>
-                                                <td className={ticket.assignedTo ? "bold" : "muted"}>
+                            <div className="admin-ticket-grid">
+                                {filteredTickets.map(ticket => (
+                                    <div key={ticket.id} className="admin-ticket-card-premium">
+                                        <div className="card-top">
+                                            <span className="ticket-id">INC-{ticket.id.slice(-4).toUpperCase()}</span>
+                                            <span className={`status-badge ${ticket.status?.toLowerCase() || 'open'}`}>
+                                                {ticket.status?.replace('_', ' ') || 'OPEN'}
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="card-main">
+                                            <h3>{ticket.title}</h3>
+                                            <p className="description">{ticket.description}</p>
+                                        </div>
+
+                                        <div className="card-info-grid">
+                                            <div className="info-item">
+                                                <span className="label">Location</span>
+                                                <span className="value">{ticket.location || "N/A"}</span>
+                                            </div>
+                                            <div className="info-item">
+                                                <span className="label">Priority</span>
+                                                <span className={`value prio-${ticket.priority?.toLowerCase() || 'medium'}`}>
+                                                    {ticket.priority || 'MEDIUM'}
+                                                </span>
+                                            </div>
+                                            <div className="info-item">
+                                                <span className="label">Category</span>
+                                                <span className="value">{ticket.category || "General"}</span>
+                                            </div>
+                                            <div className="info-item">
+                                                <span className="label">Technician</span>
+                                                <span className={`value ${ticket.assignedTo ? 'bold' : 'muted'}`}>
                                                     {ticket.assignedTo || "Not Assigned"}
-                                                </td>
-                                                <td>
-                                                    <div className="table-actions">
-                                                        <button className="act-view" onClick={() => handleViewTicket(ticket.id)}>View</button>
-                                                        <button className="act-assign" onClick={() => handleAssignClick(ticket)}>Assign</button>
-                                                        <button className="act-reject" onClick={() => handleRejectTicket(ticket)}>Reject</button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="card-footer">
+                                            <div className="user-info">
+                                                <span className="user-icon">👤</span>
+                                                <span>{ticket.createdBy}</span>
+                                            </div>
+                                            <div className="card-actions">
+                                                <button className="btn-view" onClick={() => handleViewTicket(ticket.id)}>Details</button>
+                                                <button className="btn-assign" onClick={() => handleAssignClick(ticket)}>Assign</button>
+                                                <button className="btn-reject" onClick={() => handleRejectTicket(ticket)}>Reject</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         )}
                     </section>
                 )}
             </main>
 
-            {/* Ticket Details Modal */}
+            {/* Modals */}
             {isModalOpen && (
                 <TicketDetailsModal 
                     ticketId={selectedTicketId} 
@@ -320,8 +324,6 @@ const AdminTicketsPage = () => {
                     onUpdate={fetchAllTickets}
                 />
             )}
-
-            {/* Assign Technician Modal */}
             {isAssignModalOpen && (
                 <AssignTechnicianModal 
                     ticket={selectedTicket}
@@ -329,8 +331,6 @@ const AdminTicketsPage = () => {
                     onAssignSuccess={fetchAllTickets}
                 />
             )}
-
-            {/* Reject Ticket Modal */}
             {isRejectModalOpen && (
                 <RejectTicketModal 
                     ticket={selectedTicket}

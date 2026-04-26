@@ -86,6 +86,14 @@ export const updateAdminTicketStatus = async (ticketId, status) => {
   return response.data;
 };
 
+export const rejectAdminTicket = async (ticketId, reason) => {
+  const response = await api.put(
+    `/api/admin/tickets/${ticketId}/reject`,
+    { reason }
+  );
+  return response.data;
+};
+
 export const updateAdminResolution = async (ticketId, resolutionNotes) => {
   const response = await api.put(
     `/api/admin/tickets/${ticketId}/resolution`,
@@ -114,16 +122,8 @@ export const deleteUserTicket = async (ticketId) => {
 };
 
 export const getTechnicians = async () => {
-  const response = await fetch(
-    "http://localhost:8081/api/admin/tickets/technicians",
-    {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    }
-  );
-
-  return response.json();
+  const response = await api.get("/api/admin/tickets/technicians");
+  return response.data;
 };
 
 export const getResources = async () => {

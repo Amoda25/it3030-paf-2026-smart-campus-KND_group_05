@@ -15,6 +15,8 @@ import {
   ResponsiveContainer 
 } from "recharts";
 import TicketDetailsModal from '../../components/tickets/TicketDetailsModal';
+import AssignTechnicianModal from '../../components/tickets/AssignTechnicianModal';
+import RejectTicketModal from '../../components/tickets/RejectTicketModal';
 import './AdminTicketsPage.css';
 
 const AdminTicketsPage = () => {
@@ -25,6 +27,9 @@ const AdminTicketsPage = () => {
     const [activeView, setActiveView] = useState("OVERVIEW"); 
     const [selectedTicketId, setSelectedTicketId] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+    const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+    const [selectedTicket, setSelectedTicket] = useState(null);
     const navigate = useNavigate();
 
     const ticketChartData = useMemo(() => {
@@ -68,21 +73,19 @@ const AdminTicketsPage = () => {
         };
     }, [tickets]);
 
-    const handleRejectTicket = async (ticketId) => {
-        if (window.confirm("Are you sure you want to reject this ticket? The student will see it as REJECTED.")) {
-            try {
-                await updateAdminTicketStatus(ticketId, "REJECTED");
-                fetchAllTickets();
-            } catch (error) {
-                const msg = error.response?.data || error.message || "Unknown error";
-                alert("Failed to reject ticket: " + msg);
-            }
-        }
+    const handleRejectTicket = (ticket) => {
+        setSelectedTicket(ticket);
+        setIsRejectModalOpen(true);
     };
 
     const handleViewTicket = (ticketId) => {
         setSelectedTicketId(ticketId);
         setIsModalOpen(true);
+    };
+
+    const handleAssignClick = (ticket) => {
+        setSelectedTicket(ticket);
+        setIsAssignModalOpen(true);
     };
 
     const filteredTickets = useMemo(() => {
@@ -287,8 +290,8 @@ const AdminTicketsPage = () => {
                                                 <td>
                                                     <div className="table-actions">
                                                         <button className="act-view" onClick={() => handleViewTicket(ticket.id)}>View</button>
-                                                        <button className="act-assign" onClick={() => handleViewTicket(ticket.id)}>Assign</button>
-                                                        <button className="act-reject" onClick={() => handleRejectTicket(ticket.id)}>Reject</button>
+                                                        <button className="act-assign" onClick={() => handleAssignClick(ticket)}>Assign</button>
+                                                        <button className="act-reject" onClick={() => handleRejectTicket(ticket)}>Reject</button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -307,6 +310,24 @@ const AdminTicketsPage = () => {
                     ticketId={selectedTicketId} 
                     onClose={() => setIsModalOpen(false)}
                     onUpdate={fetchAllTickets}
+                />
+            )}
+
+            {/* Assign Technician Modal */}
+            {isAssignModalOpen && (
+                <AssignTechnicianModal 
+                    ticket={selectedTicket}
+                    onClose={() => setIsAssignModalOpen(false)}
+                    onAssignSuccess={fetchAllTickets}
+                />
+            )}
+
+            {/* Reject Ticket Modal */}
+            {isRejectModalOpen && (
+                <RejectTicketModal 
+                    ticket={selectedTicket}
+                    onClose={() => setIsRejectModalOpen(false)}
+                    onRejectSuccess={fetchAllTickets}
                 />
             )}
         </div>

@@ -167,7 +167,20 @@ const BookingForm = ({ onClose, onSuccess, resources = [] }) => {
 
           <div className="form-group">
             <label>Number of Attendees</label>
-            <input type="number" name="attendees" min="1" value={formData.attendees} onChange={handleChange} required disabled={isLoading} />
+            <input 
+              type="number" 
+              name="attendees" 
+              min="1" 
+              value={formData.attendees} 
+              onChange={(e) => {
+                const val = e.target.value;
+                if (val === "" || Number(val) >= 0) {
+                  handleChange(e);
+                }
+              }} 
+              required 
+              disabled={isLoading} 
+            />
           </div>
 
           <div className="form-group">

@@ -487,8 +487,14 @@ export default function ManageResourcesPage() {
                       name="capacity"
                       placeholder="e.g. 50"
                       type="number"
+                      min="1"
                       value={form.capacity}
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === "" || Number(val) >= 0) {
+                          handleChange(e);
+                        }
+                      }}
                       className={formErrors.capacity ? "input-error" : ""}
                     />
                     {formErrors.capacity && <span className="error-text">{formErrors.capacity}</span>}

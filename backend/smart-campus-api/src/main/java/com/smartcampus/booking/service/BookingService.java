@@ -98,7 +98,8 @@ public class BookingService {
             System.out.println("⚠️ Notification failed: " + e.getMessage());
         }
 
-        return BookingResponseDTO.fromEntity(saved);
+        return convertToResponseDTO(saved);
+
     }
     
     /**
@@ -107,7 +108,8 @@ public class BookingService {
     public List<BookingResponseDTO> getUserBookings(String userId) {
         return bookingRepository.findByUserIdOrderByStartTimeDesc(userId)
             .stream()
-            .map(BookingResponseDTO::fromEntity)
+            .map(this::convertToResponseDTO)
+
             .collect(Collectors.toList());
     }
     
@@ -117,7 +119,8 @@ public class BookingService {
     public BookingResponseDTO getUserBookingById(String bookingId, String userId) {
         Booking booking = bookingRepository.findByIdAndUserId(bookingId, userId)
             .orElseThrow(() -> new RuntimeException("Booking not found or not owned by user"));
-        return BookingResponseDTO.fromEntity(booking);
+        return convertToResponseDTO(booking);
+
     }
     
     /**
@@ -137,7 +140,8 @@ public class BookingService {
         
         booking.setStatus(BookingStatus.CANCELLED);
         Booking updated = bookingRepository.save(booking);
-        return BookingResponseDTO.fromEntity(updated);
+        return convertToResponseDTO(updated);
+
     }
     
     // ========== ADMIN OPERATIONS ==========
@@ -148,7 +152,8 @@ public class BookingService {
     public List<BookingResponseDTO> getAllBookings() {
         return bookingRepository.findAllByOrderByCreatedAtDesc()
             .stream()
-            .map(BookingResponseDTO::fromEntity)
+            .map(this::convertToResponseDTO)
+
             .collect(Collectors.toList());
     }
     
@@ -158,7 +163,8 @@ public class BookingService {
     public List<BookingResponseDTO> getBookingsByStatus(BookingStatus status) {
         return bookingRepository.findByStatusOrderByCreatedAtDesc(status)
             .stream()
-            .map(BookingResponseDTO::fromEntity)
+            .map(this::convertToResponseDTO)
+
             .collect(Collectors.toList());
     }
     
@@ -201,7 +207,8 @@ public class BookingService {
         );
 
         
-        return BookingResponseDTO.fromEntity(updated);
+        return convertToResponseDTO(updated);
+
     }
     
     /**
@@ -228,7 +235,8 @@ public class BookingService {
         );
 
         
-        return BookingResponseDTO.fromEntity(updated);
+        return convertToResponseDTO(updated);
+
     }
     
     /**
@@ -237,7 +245,8 @@ public class BookingService {
     public BookingResponseDTO getBookingById(@NonNull String bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
             .orElseThrow(() -> new RuntimeException("Booking not found"));
-        return BookingResponseDTO.fromEntity(booking);
+        return convertToResponseDTO(booking);
+
     }
 
     /**
@@ -249,4 +258,23 @@ public class BookingService {
         }
         bookingRepository.deleteById(bookingId);
     }
+
+    private BookingResponseDTO convertToResponseDTO(Booking booking) {
+        BookingResponseDTO dto = BookingResponseDTO.fromEntity(booking);
+        
+        // Try finding by ID first, then by Email as fallback (for legacy data)
+        Optional<User> userOpt = userRepository.findById(booking.getUserId());
+        if (userOpt.isEmpty()) {
+            userOpt = userRepository.findByEmail(booking.getUserId());
+        }
+
+        userOpt.ifPresent(user -> {
+            dto.setStudentName(user.getName());
+            dto.setIdNumber(user.getIdNumber());
+            dto.setDepartment(user.getDepartment());
+        });
+        return dto;
+    }
+
 }
+

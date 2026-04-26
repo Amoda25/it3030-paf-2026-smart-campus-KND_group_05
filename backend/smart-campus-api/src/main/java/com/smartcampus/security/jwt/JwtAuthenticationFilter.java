@@ -32,8 +32,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         String path = request.getRequestURI();
         
-        System.out.println("DEBUG: JwtFilter processing path: " + path);
-        
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             System.out.println("DEBUG: JwtFilter detected Bearer token for path: " + path);
@@ -42,17 +40,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String userId = jwtService.extractUserId(token);
                 String role = jwtService.extractRole(token);
                 
-                UserDetails userDetails = User.builder()
-                    .username(userId)
-                    .password("")
-                    .roles(role)
-                    .build();
-                
-                UsernamePasswordAuthenticationToken authentication = 
-                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                if (userId != null) {
+                    // Create authorities list
+                    java.util.List<org.springframework.security.core.authority.SimpleGrantedAuthority> authorities = new java.util.ArrayList<>();
+                    if (role != null && !role.isEmpty()) {
+                        String roleWithPrefix = role.startsWith("ROLE_") ? role : "ROLE_" + role;
+                        authorities.add(new org.springframework.security.core.authority.SimpleGrantedAuthority(roleWithPrefix));
+                    }
+
+                    UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+                        userId, "", authorities
+                    );
+                    
+                    UsernamePasswordAuthenticationToken authentication = 
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    System.out.println("DEBUG: JwtFilter set authentication for user: " + userId + " with role: " + role);
+                }
             }
+
         }
         
         filterChain.doFilter(request, response);

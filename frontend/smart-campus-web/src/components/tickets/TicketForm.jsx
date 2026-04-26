@@ -13,7 +13,6 @@ function TicketForm() {
   const [category, setCategory] = useState("RESOURCE_ISSUE");
   const [resourceId, setResourceId] = useState("");
   const [resources, setResources] = useState([]);
-  const [location, setLocation] = useState("");
   const [contactName, setContactName] = useState("");
   const [contactDetails, setContactDetails] = useState("");
   const [images, setImages] = useState([]);
@@ -83,7 +82,6 @@ function TicketForm() {
       title,
       resourceId,
       priority,
-      location,
       description,
       contactName,
       contactDetails
@@ -115,7 +113,6 @@ function TicketForm() {
       formData.append("priority", priority);
       formData.append("resourceId", resourceId);
       formData.append("category", category);
-      formData.append("location", location);
       formData.append("contactName", contactName);
       formData.append("contactDetails", contactDetails);
 
@@ -185,7 +182,7 @@ function TicketForm() {
                   <option value="">Select Resource</option>
                   {resources.map((res) => (
                     <option key={res.id} value={res.id}>
-                      {res.name} ({res.id})
+                      {res.name}
                     </option>
                   ))}
                 </select>
@@ -212,21 +209,6 @@ function TicketForm() {
               </div>
             </div>
 
-            <div className="field">
-              <label>Location *</label>
-              <input
-                type="text"
-                placeholder="Example: B401 / Lab 03"
-                value={location}
-                onChange={(e) => {
-                  setLocation(e.target.value);
-                  validate("location", e.target.value);
-                }}
-                className={errors.location ? "input-error" : ""}
-                required
-              />
-              {errors.location && <span className="field-error">{errors.location}</span>}
-            </div>
 
             <div className="field">
               <label>Issue Description *</label>

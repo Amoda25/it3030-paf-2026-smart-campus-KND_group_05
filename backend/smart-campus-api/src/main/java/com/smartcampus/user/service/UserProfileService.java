@@ -8,6 +8,7 @@ import com.smartcampus.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.lang.NonNull;
 
 @Service
 public class UserProfileService {
@@ -42,7 +43,7 @@ public class UserProfileService {
         deleteAccount(user.getId());
     }
 
-    public UserProfileDTO getProfile(String userId) {
+    public UserProfileDTO getProfile(@NonNull String userId) {
         User user = userRepository.findById(userId)
                 .orElseGet(() -> userRepository.findByEmail(userId)
                         .orElseThrow(() -> new RuntimeException("User not found with ID or Email: " + userId)));
@@ -59,7 +60,7 @@ public class UserProfileService {
     }
 
     @Transactional
-    public UserProfileDTO updateProfile(String userId, UserProfileDTO dto) {
+    public UserProfileDTO updateProfile(@NonNull String userId, UserProfileDTO dto) {
         User user = userRepository.findById(userId)
                 .orElseGet(() -> userRepository.findByEmail(userId)
                         .orElseThrow(() -> new RuntimeException("User not found with ID or Email: " + userId)));
@@ -104,7 +105,7 @@ public class UserProfileService {
     }
 
     @Transactional
-    public void deleteAccount(String userId) {
+    public void deleteAccount(@NonNull String userId) {
         User user = userRepository.findById(userId)
                 .orElseGet(() -> userRepository.findByEmail(userId)
                         .orElseThrow(() -> new RuntimeException("User not found with ID or Email: " + userId)));

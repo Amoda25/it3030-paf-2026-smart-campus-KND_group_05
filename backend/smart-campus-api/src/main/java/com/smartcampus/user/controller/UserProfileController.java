@@ -4,8 +4,6 @@ import com.smartcampus.user.dto.UserProfileDTO;
 import com.smartcampus.user.service.UserProfileService;
 import com.smartcampus.common.service.FileStorageService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

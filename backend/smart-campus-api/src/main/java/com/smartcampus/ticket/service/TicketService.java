@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.smartcampus.ticket.dto.TicketCreateDTO;
 import com.smartcampus.ticket.dto.TicketResponseDTO;
+import org.springframework.lang.NonNull;
 
 public interface TicketService {
 
@@ -11,28 +12,28 @@ public interface TicketService {
 
     List<TicketResponseDTO> getMyTickets(String currentUserId);
 
-    TicketResponseDTO getTicketById(String ticketId, String currentUserId);
+    TicketResponseDTO getTicketById(@NonNull String ticketId, String currentUserId);
 
     List<TicketResponseDTO> getAllTickets();
 
-    void assignTechnician(String ticketId, String technicianId);
+    void assignTechnician(@NonNull String ticketId, String technicianId);
 
     List<TicketResponseDTO> getAssignedTickets(String technicianId);
 
-    void updateTicketStatus(String ticketId, String status, String technicianId);
+    void updateTicketStatus(@NonNull String ticketId, String status, String technicianId);
     
-    void updateTicketStatusAdmin(String ticketId, String status);
+    void updateTicketStatusAdmin(@NonNull String ticketId, String status);
     
-    void rejectTicket(String ticketId, String reason);
+    void rejectTicket(@NonNull String ticketId, String reason);
 
-    void updateResolution(String ticketId, String resolutionNotes, String technicianId);
+    void updateResolution(@NonNull String ticketId, String resolutionNotes, String technicianId);
 
-    void updateResolutionAdmin(String ticketId, String resolutionNotes);
+    void updateResolutionAdmin(@NonNull String ticketId, String resolutionNotes);
 
-    void deleteTicket(String ticketId);
+    void deleteTicket(@NonNull String ticketId);
     
-    void deleteTicketForTechnician(String ticketId, String technicianId);
+    void deleteTicketForTechnician(@NonNull String ticketId, String technicianId);
 
-    void deleteTicketForUser(String ticketId, String userId);
+    void deleteTicketForUser(@NonNull String ticketId, String userId);
 
 }

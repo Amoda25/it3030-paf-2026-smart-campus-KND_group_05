@@ -16,7 +16,6 @@ import com.smartcampus.ticket.model.Comment;
 import com.smartcampus.ticket.model.Ticket;
 import com.smartcampus.ticket.repository.CommentRepository;
 import com.smartcampus.ticket.repository.TicketRepository;
-import com.smartcampus.user.model.User;
 import com.smartcampus.user.repository.UserRepository;
 import java.util.stream.Collectors;
 

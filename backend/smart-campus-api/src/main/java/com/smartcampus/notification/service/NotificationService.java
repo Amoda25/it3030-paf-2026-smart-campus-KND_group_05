@@ -1,6 +1,7 @@
 package com.smartcampus.notification.service;
 
 import java.util.List;
+import org.springframework.lang.NonNull;
 
 import com.smartcampus.notification.dto.NotificationDTO;
 
@@ -14,13 +15,13 @@ public interface NotificationService {
 
     List<NotificationDTO> getUnreadNotificationsByUserId(String userId);
 
-    void markNotificationAsRead(String notificationId);
+    void markNotificationAsRead(@NonNull String notificationId);
 
     void markAllNotificationsAsRead(String userId);
 
     int getUnreadCount(String userId);
 
-    void deleteNotification(String notificationId);
+    void deleteNotification(@NonNull String notificationId);
 
     
     

@@ -162,7 +162,17 @@ const ProfilePage = () => {
                                 </div>
                                 <div className="form-field">
                                     <label>Degree Program / Major</label>
-                                    <input type="text" name="degreeProgram" value={profile.degreeProgram || ""} onChange={handleChange} placeholder="Your Major" />
+                                    <select name="degreeProgram" value={profile.degreeProgram || ""} onChange={handleChange}>
+                                        <option value="">Select Degree Program</option>
+                                        <option value="Information Technology">Information Technology</option>
+                                        <option value="Software Engineering">Software Engineering</option>
+                                        <option value="Cyber Security">Cyber Security</option>
+                                        <option value="Data Science">Data Science</option>
+                                        <option value="Artificial Intelligence">Artificial Intelligence</option>
+                                        <option value="Interactive Media">Interactive Media</option>
+                                        <option value="Information Systems Engineering">Information Systems Engineering</option>
+                                        <option value="Computer Systems & Network Engineering">Computer Systems & Network Engineering</option>
+                                    </select>
                                 </div>
                                 <div className="form-field">
                                     <label>Current Year and Semester</label>

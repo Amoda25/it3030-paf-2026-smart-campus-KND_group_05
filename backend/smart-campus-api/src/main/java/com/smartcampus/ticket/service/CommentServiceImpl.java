@@ -1,5 +1,8 @@
 package com.smartcampus.ticket.service;
 
+import org.springframework.lang.NonNull;
+
+
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -36,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment updateComment(String commentId, CommentUpdateDTO dto, String currentUserId) {
+    public Comment updateComment(@NonNull String commentId, CommentUpdateDTO dto, String currentUserId) {
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
@@ -50,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void deleteComment(String commentId, String currentUserId) {
+    public void deleteComment(@NonNull String commentId, String currentUserId) {
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
